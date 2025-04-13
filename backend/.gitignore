@@ -1,28 +1,47 @@
-# Angular
-node_modules/
-dist/
-.tmp/
-out-tsc/
-coverage/
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
-# IDEs and editors
+## Visual Studio
 .vscode/
-.idea/
+.vs/
+*.dbmdl
+*.pdb
+*.cache
+*.log
+*.sdf
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# System files
-.DS_Store
-Thumbs.db
+## NuGet
+*.nupkg
+packages/
+*.snupkg
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+artifacts/
 
-# Environment files
-.env
-.env.local
-.env.*.local
+## Build Results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+out/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
 
-# Angular specific
-.angular/cache/
+## Others
+*.sql
+*.sqlite
+*.mdf
+*.ldf
+*.bak
