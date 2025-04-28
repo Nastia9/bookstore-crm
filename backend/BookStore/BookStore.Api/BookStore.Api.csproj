@@ -12,13 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Responses\" />
-    <Folder Include="DTOs\Requests\" />
-    <Folder Include="Endpoints\" />
     <Folder Include="Extensions\" />
     <Folder Include="Settings\" />
     <Folder Include="Middlewares\" />
-    <Folder Include="Mappings\" />
   </ItemGroup>
 
   <ItemGroup>
