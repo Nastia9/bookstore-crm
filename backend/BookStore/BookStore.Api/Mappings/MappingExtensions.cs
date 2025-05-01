@@ -94,5 +94,14 @@ namespace BookStore.Api.Mappings
                 category.Id,
                 category.Name
             );
+
+        public static ApplicationUser ToEntity(this RegisterRequestDto dto)
+            => new()
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName
+            };
     }
 }

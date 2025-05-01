@@ -1,4 +1,5 @@
 ﻿using BookStore.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Infrastructure.Data
 {
-    public class BookStoreDbContext : DbContext
+    public class BookStoreDbContext : IdentityDbContext<ApplicationUser>
     {
         public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options)
             : base(options) { }
@@ -16,12 +17,13 @@ namespace BookStore.Infrastructure.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookCategory> BookCategories { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.Author)
                 .WithMany(a => a.Books)
@@ -33,6 +35,12 @@ namespace BookStore.Infrastructure.Data
                 .WithMany(c => c.Books)
                 .UsingEntity(join => join.ToTable("BookCategoryMap"));
 
+            modelBuilder.Entity<Book>(eb =>
+            {
+                eb.Property(b => b.Price)
+                  .HasPrecision(18, 2);
+            });
+
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.Items)
                 .WithOne(oi => oi.Order)
@@ -43,6 +51,12 @@ namespace BookStore.Infrastructure.Data
                 .HasOne(oi => oi.Book)
                 .WithMany(b => b.OrderItems)
                 .HasForeignKey(oi => oi.BookId);
+
+            modelBuilder.Entity<OrderItem>(eb =>
+            {
+                eb.Property(b => b.UnitPrice)
+                  .HasPrecision(18, 2);
+            });
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.User)

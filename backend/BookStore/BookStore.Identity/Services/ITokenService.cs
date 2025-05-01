@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Infrastructure.Services
+namespace BookStore.Identity.Services
 {
     public interface ITokenService
     {
