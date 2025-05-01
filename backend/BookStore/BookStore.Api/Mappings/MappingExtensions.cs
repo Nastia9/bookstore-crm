@@ -34,6 +34,16 @@ namespace BookStore.Api.Mappings
                 Categories = new List<BookCategory>()
             };
 
+        public static void ApplyToEntity(this UpdateBookDto dto, Book entity)
+        {
+            entity.Title = dto.Title;
+            entity.ISBN = dto.ISBN;
+            entity.Pages = dto.Pages;
+            entity.Stock = dto.Stock;
+            entity.Price = dto.Price;
+            entity.AuthorId = dto.AuthorId;
+        }
+
         public static BookResponseDto ToDto(this Book book)
             => new(
                 book.Id,
@@ -60,13 +70,11 @@ namespace BookStore.Api.Mappings
                 Bio = dto.Bio
             };
 
-        public static Author ToEntity(this UpdateAuthorDto dto)
-            => new()
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Bio = dto.Bio
-            };
+        public static void ApplyToEntity(this UpdateAuthorDto dto, Author entity)
+        {
+            entity.Name = dto.Name;
+            entity.Bio = dto.Bio;
+        }
 
         public static AuthorResponseDto ToDto(this Author author)
             => new(
@@ -82,12 +90,10 @@ namespace BookStore.Api.Mappings
                 Name = dto.Name
             };
 
-        public static BookCategory ToEntity(this UpdateCategoryDto dto)
-            => new()
-            {
-                Id = dto.Id,
-                Name = dto.Name
-            };
+        public static void ApplyToEntity(this UpdateCategoryDto dto, BookCategory entity)
+        {
+            entity.Name = dto.Name;
+        }
 
         public static CategoryResponseDto ToDto(this BookCategory category)
             => new(

@@ -1,4 +1,5 @@
 @BookStore.Api_HostAddress = http://localhost:5013
+@host = http://localhost:5013
 
 ### 1) Ðåºñòðàö³ÿ íîâîãî êîðèñòóâà÷à
 POST http://localhost:5013/auth/register
@@ -48,3 +49,114 @@ Content-Type: application/json
   "email": "noone@nowhere.com",
   "password": "DoesntMatter"
 }
+
+################################################################################
+#                                AUTHOR APIs                                 #
+################################################################################
+
+### 1) List all authors
+GET {{host}}/authors
+Accept: application/json
+
+### 2) Create a new author
+POST {{host}}/authors
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "bio": "An award-winning fantasy novelist."
+}
+
+### 3) Grab the newly?created author’s ID from the response above, then:
+
+### 3a) Get that author by ID
+GET {{host}}/authors/{{authorId}}
+Accept: application/json
+
+### 3b) Update that author
+PUT {{host}}/authors/{{authorId}}
+Content-Type: application/json
+
+{
+  "id": "{{authorId}}",
+  "firstName": "Janet",
+  "lastName": "Doe",
+  "bio": "Updated bio goes here."
+}
+
+### 3c) Delete that author
+DELETE {{host}}/authors/{{authorId}}
+
+################################################################################
+#                               CATEGORY APIs                                 #
+################################################################################
+
+### 4) List all categories
+GET {{host}}/categories
+Accept: application/json
+
+### 5) Create a new category
+POST {{host}}/categories
+Content-Type: application/json
+
+{
+  "name": "Science Fiction"
+}
+
+### 6a) Get that category
+GET {{host}}/categories/{{categoryId}}
+Accept: application/json
+
+### 6b) Update that category
+PUT {{host}}/categories/{{categoryId}}
+Content-Type: application/json
+
+{
+  "id": "{{categoryId}}",
+  "name": "Sci-Fi & Fantasy"
+}
+
+### 6c) Delete that category
+DELETE {{host}}/categories/{{categoryId}}
+
+################################################################################
+#                                  BOOK APIs                                  #
+################################################################################
+
+### 7) List all books
+GET {{host}}/books
+Accept: application/json
+
+### 8) Create a new book
+# (make sure you’ve already created an authorId & categoryId above)
+POST {{host}}/books
+Content-Type: application/json
+
+{
+  "title": "The First Odyssey",
+  "pages": 320,
+  "price": 14.99,
+  "authorId": "{{authorId}}",
+  "categoryIds": ["{{categoryId}}"]
+}
+
+### 9a) Get that book by ID
+GET {{host}}/books/{{bookId}}
+Accept: application/json
+
+### 9b) Update that book
+PUT {{host}}/books/{{bookId}}
+Content-Type: application/json
+
+{
+  "id": "{{bookId}}",
+  "title": "The First Odyssey - Revised",
+  "pages": 338,
+  "price": 15.99,
+  "authorId": "{{authorId}}",
+  "categoryIds": ["{{categoryId}}"]
+}
+
+### 9c) Delete that book
+DELETE {{host}}/books/{{bookId}}

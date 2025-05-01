@@ -14,10 +14,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-BooksEndpoints.Map(app);
-AuthorsEndpoints.Map(app);
-CategoriesEndpoints.Map(app);
 app.MapAuthEndpoints();
+app.MapAuthorEndpoints();
+app.MapCategoryEndpoints();
+app.MapBookEndpoints();
 
 await app.Services.SeedRolesAndAdminAsync();
 

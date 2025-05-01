@@ -1,95 +1,125 @@
 ﻿using BookStore.Api.DTOs.Requests;
+using BookStore.Api.DTOs.Responses;
 using BookStore.Api.Mappings;
 using BookStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStore.Api.Endpoints
+namespace BookStore.Api.Endpoints;
+
+public static class BookEndpoints
 {
-    public static class BooksEndpoints
+    public static RouteGroupBuilder MapBookEndpoints(this WebApplication app)
     {
-        public static void Map(WebApplication app)
-        {
-            var group = app.MapGroup("/api/books");
+        var grp = app.MapGroup("/books").WithTags("Books");
 
-            group.MapGet("", async (BookStoreDbContext db) =>
-            {
-                var books = await db.Books
-                    .Include(b => b.Author)
-                    .Include(b => b.Categories)
-                    .ToListAsync();
+        grp.MapGet("/", GetAll)
+           .AllowAnonymous()
+           .Produces<BookResponseDto[]>(200);
 
-                return Results.Ok(books.Select(b => b.ToDto()));
-            });
+        grp.MapGet("/{id:guid}", GetById)
+           .AllowAnonymous()
+           .Produces<BookResponseDto>(200)
+           .Produces(404);
 
-            group.MapGet("/{id}", async (Guid id, BookStoreDbContext db) =>
-            {
-                var book = await db.Books
-                    .Include(b => b.Author)
-                    .Include(b => b.Categories)
-                    .FirstOrDefaultAsync(b => b.Id == id);
+        grp.MapPost("/", Create)
+           .RequireAuthorization("RequireEmployee")
+           .Accepts<CreateBookDto>("application/json")
+           .Produces<BookResponseDto>(201)
+           .Produces(400);
 
-                return book is not null
-                    ? Results.Ok(book.ToDto())
-                    : Results.NotFound();
-            });
+        grp.MapPut("/{id:guid}", Update)
+           .RequireAuthorization("RequireEmployee")
+           .Accepts<UpdateBookDto>("application/json")
+           .Produces(204)
+           .Produces(400)
+           .Produces(404);
 
-            group.MapPost("", async (CreateBookDto dto, BookStoreDbContext db) =>
-            {
-                var book = dto.ToEntity();
-                // додаткові категорії
-                if (dto.CategoryIds?.Any() == true)
-                {
-                    book.Categories = await db.BookCategories
-                        .Where(c => dto.CategoryIds.Contains(c.Id))
-                        .ToListAsync();
-                }
+        grp.MapDelete("/{id:guid}", Delete)
+           .RequireAuthorization("RequireEmployee")
+           .Produces(204)
+           .Produces(404);
 
-                db.Books.Add(book);
-                await db.SaveChangesAsync();
+        return grp;
+    }
 
-                // завантажуємо навігаційні своїства
-                await db.Entry(book).Reference(b => b.Author).LoadAsync();
-                await db.Entry(book).Collection(b => b.Categories).LoadAsync();
+    private static async Task<IResult> GetAll(
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        var books = await db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Categories)
+            .Select(b => b.ToDto())
+            .ToListAsync(ct);
+        return Results.Ok(books);
+    }
 
-                return Results.Created($"/api/books/{book.Id}", book.ToDto());
-            });
+    private static async Task<IResult> GetById(
+        Guid id,
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        var dto = await db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Categories)
+            .Where(b => b.Id == id)
+            .Select(b => b.ToDto())
+            .SingleOrDefaultAsync(ct);
 
-            group.MapPut("/{id}", async (UpdateBookDto dto, BookStoreDbContext db) =>
-            {
-                if (!await db.Books.AnyAsync(b => b.Id == dto.Id))
-                    return Results.NotFound();
+        return dto is null
+            ? Results.NotFound()
+            : Results.Ok(dto);
+    }
 
-                var book = dto.ToEntity();
-                db.Books.Attach(book);
+    private static async Task<IResult> Create(
+        CreateBookDto dto,
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        var book = dto.ToEntity();
+        db.Books.Add(book);
+        await db.SaveChangesAsync(ct);
 
-                if (dto.CategoryIds?.Any() == true)
-                {
-                    book.Categories = await db.BookCategories
-                        .Where(c => dto.CategoryIds.Contains(c.Id))
-                        .ToListAsync();
-                }
+        await db.Entry(book).Reference(b => b.Author).LoadAsync(ct);
+        await db.Entry(book).Collection(b => b.Categories)
+              .Query()
+              .LoadAsync(ct);
 
-                await db.SaveChangesAsync();
-                await db.Entry(book).Reference(b => b.Author).LoadAsync();
-                await db.Entry(book).Collection(b => b.Categories).LoadAsync();
+        return Results.Created($"/books/{book.Id}", book.ToDto());
+    }
 
-                return Results.Ok(book.ToDto());
-            });
+    private static async Task<IResult> Update(
+        Guid id,
+        UpdateBookDto dto,
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        if (id != dto.Id)
+            return Results.BadRequest();
 
-            group.MapDelete("/{id}", async (Guid id, BookStoreDbContext db) =>
-            {
-                var deletedRecords = await db.Books.Where(c => c.Id == id).ExecuteDeleteAsync();
+        var book = await db.Books
+            .Include(b => b.Categories)
+            .SingleOrDefaultAsync(b => b.Id == id, ct);
 
-                if (deletedRecords.Equals(0))
-                {
-                    return Results.NotFound();
-                }
-                else
-                {
-                    await db.SaveChangesAsync();
-                    return Results.NoContent();
-                }
-            });
-        }
+        if (book is null)
+            return Results.NotFound();
+
+        dto.ApplyToEntity(book);
+        await db.SaveChangesAsync(ct);
+        return Results.NoContent();
+    }
+
+    private static async Task<IResult> Delete(
+        Guid id,
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        var book = await db.Books.FindAsync([id], ct);
+        if (book is null)
+            return Results.NotFound();
+
+        db.Books.Remove(book);
+        await db.SaveChangesAsync(ct);
+        return Results.NoContent();
     }
 }
