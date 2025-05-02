@@ -12,6 +12,6 @@ namespace BookStore.Domain.Entities
         public required string Name { get; set; }
         public string? Bio { get; set; }
 
-        public ICollection<Book> Books { get; set; } = new List<Book>();
+        public ICollection<Book> Books { get; set; } = [];
     }
 }

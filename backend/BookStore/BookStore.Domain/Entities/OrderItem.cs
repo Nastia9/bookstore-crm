@@ -10,10 +10,10 @@ namespace BookStore.Domain.Entities
     {
         public Guid Id { get; set; }
         public Guid OrderId { get; set; }
-        public required Order Order { get; set; }
+        public Order? Order { get; set; }
 
         public Guid BookId { get; set; }
-        public required Book Book { get; set; }
+        public Book? Book { get; set; }
 
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }

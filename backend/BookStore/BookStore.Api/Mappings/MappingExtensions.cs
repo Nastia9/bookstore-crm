@@ -1,6 +1,7 @@
 ﻿using BookStore.Api.DTOs.Requests;
 using BookStore.Api.DTOs.Responses;
 using BookStore.Domain.Entities;
+using BookStore.Domain.Enums;
 
 namespace BookStore.Api.Mappings
 {
@@ -109,5 +110,95 @@ namespace BookStore.Api.Mappings
                 FirstName = dto.FirstName,
                 LastName = dto.LastName
             };
+
+        public static ApplicationUser ToEntity(this CreateUserRequestDto dto)
+        {
+            return new ApplicationUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                PhoneNumber = dto.PhoneNumber
+            };
+        }
+
+        public static void ApplyToEntity(this UpdateUserRequestDto dto, ApplicationUser user)
+        {
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.PhoneNumber = dto.PhoneNumber;
+        }
+
+        public static UserResponseDto ToResponseDto(this ApplicationUser u)
+            => new(
+                u.Id,
+                u.Email!,
+                u.FirstName!,
+                u.LastName!,
+                u.PhoneNumber,
+                ""
+             );
+
+        public static Order ToEntity(this CreateOrderRequestDto dto)
+        {
+            var order = new Order
+            {
+                Id = Guid.NewGuid(),
+                UserId = dto.UserId!,
+                OrderDate = DateTime.UtcNow,
+                Status = OrderStatus.Pending
+            };
+
+            foreach (var item in dto.Items)
+            {
+                order.Items.Add(new OrderItem
+                {
+                    BookId = item.BookId,
+                    Quantity = item.Quantity,
+                    UnitPrice = 0m
+                });
+            }
+
+            return order;
+        }
+
+        public static void ApplyToEntity(this UpdateOrderRequestDto dto, Order order)
+        {
+            order.Status = dto.Status;
+
+            if (dto.Items is not null)
+            {
+                order.Items.Clear();
+                foreach (var i in dto.Items)
+                {
+                    order.Items.Add(new OrderItem
+                    {
+                        BookId = i.BookId,
+                        Quantity = i.Quantity,
+                        UnitPrice = 0m
+                    });
+                }
+            }
+        }
+
+        public static OrderResponseDto ToResponseDto(this Order o)
+        {
+            var items = o.Items.Select(i =>
+                new OrderItemResponseDto(
+                    i.BookId,
+                    i.Book.Title,
+                    i.Quantity,
+                    i.UnitPrice))
+                .ToList();
+
+            return new OrderResponseDto(
+                o.Id,
+                o.UserId,
+                o.User?.Email,
+                o.OrderDate,
+                o.Status,
+                items);
+        }
     }
 }

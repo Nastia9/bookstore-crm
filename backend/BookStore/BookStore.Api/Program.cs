@@ -18,6 +18,8 @@ app.MapAuthEndpoints();
 app.MapAuthorEndpoints();
 app.MapCategoryEndpoints();
 app.MapBookEndpoints();
+app.MapOrderEndpoints();
+app.MapUserEndpoints();
 
 await app.Services.SeedRolesAndAdminAsync();
 
