@@ -1,0 +1,41 @@
+<div class="cart-backdrop" (click)="onClose()"></div>
+<div class="cart-modal">
+  <header class="cart-modal__header">
+    <h2><lucide-icon name="shoppingCart"></lucide-icon> Кошик</h2>
+    <button class="cart-modal__close" (click)="onClose()">
+      <lucide-icon name="x"></lucide-icon>
+    </button>
+  </header>
+
+  <div class="cart-modal__body">
+    <ng-container *ngIf="(items$ | async)?.length; else empty">
+      <div class="cart-item" *ngFor="let i of items$ | async">
+        <div class="cart-item__info">
+          <div class="cart-item__title">{{ i.book.title }}</div>
+          <div class="cart-item__price">{{ i.book.price }} ₴ за од.</div>
+        </div>
+        <div class="cart-item__controls">
+          <button (click)="dec(i)">–</button>
+          <span>{{ i.quantity }}</span>
+          <button (click)="inc(i)">+</button>
+        </div>
+        <div class="cart-item__sum">{{ i.book.price * i.quantity }} ₴</div>
+        <button class="cart-item__del" (click)="remove(i)">
+          <lucide-icon name="trash2" class="text-red-500"></lucide-icon>
+        </button>
+      </div>
+      <footer class="cart-modal__footer">
+        <div class="cart-total">Загальна сума: <strong>{{ total }} ₴</strong></div>
+        <button class="cart-checkout" (click)="onCheckout()">
+            Оформити замовлення
+        </button>
+      </footer>
+    </ng-container>
+    <ng-template #empty>
+      <div class="cart-modal__empty">
+        <lucide-icon name="shoppingCart" size="48"></lucide-icon>
+        <p>Ваш кошик порожній</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

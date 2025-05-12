@@ -1,0 +1,65 @@
+<div class="checkout-modal">
+  <div class="checkout-modal__header">
+    <lucide-icon name="box" class="checkout-modal__icon"></lucide-icon>
+    <div>
+      <h2 class="checkout-modal__title">Оформлення замовлення</h2>
+      <p class="checkout-modal__subtitle">Заповніть форму нижче, щоб оформити замовлення</p>
+    </div>
+    <button class="checkout-modal__close" (click)="onCancel()">
+      <lucide-icon name="x" />
+    </button>
+  </div>
+
+  <form [formGroup]="addressForm" class="checkout-modal__body" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <label for="region">Область *</label>
+      <input id="region" formControlName="region" />
+      <small *ngIf="addressForm.get('region')?.touched && addressForm.get('region')?.invalid">
+        Область обов’язкова
+      </small>
+    </div>
+
+    <div class="form-row">
+      <label for="city">Місто/Селище/Село *</label>
+      <input id="city" formControlName="city" />
+      <small *ngIf="addressForm.get('city')?.touched && addressForm.get('city')?.invalid">
+        Це поле обов’язкове
+      </small>
+    </div>
+
+    <div class="form-row">
+      <label for="street">Вулиця *</label>
+      <input id="street" formControlName="street" />
+      <small *ngIf="addressForm.get('street')?.touched && addressForm.get('street')?.invalid">
+        Вулиця обов’язкова
+      </small>
+    </div>
+
+    <div class="form-row">
+      <label for="houseNumber">Номер будинку *</label>
+      <input id="houseNumber" formControlName="houseNumber" />
+      <small *ngIf="addressForm.get('houseNumber')?.touched && addressForm.get('houseNumber')?.invalid">
+        Введіть номер будинку
+      </small>
+    </div>
+
+    <div class="form-row">
+      <label for="apartmentNumber">Номер квартири</label>
+      <input id="apartmentNumber" formControlName="apartmentNumber" />
+    </div>
+  </form>
+
+  <!-- Інформація про кошик -->
+  <div class="checkout-modal__info">
+    <h3>Інформація про замовлення</h3>
+    <p>Кількість товарів: <strong>{{ totalItems }}</strong></p>
+    <p>Загальна кількість: <strong>{{ totalQuantity }}</strong></p>
+    <p>Загальна сума: <strong>{{ totalPrice | number:'1.0-0' }} ₴</strong></p>
+  </div>
+
+  <!-- Footer із кнопкою -->
+  <div class="checkout-modal__footer">
+    <button class="btn btn--primary" (click)="onSubmit()">Підтвердити замовлення</button>
+  </div>
+</div>
+

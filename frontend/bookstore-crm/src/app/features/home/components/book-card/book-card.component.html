@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="card__image"></div>
+  <div class="card__body">
+    <h3 class="card__title">{{ book.title }}</h3>
+    <p class="card__author">{{ book.author }}</p>
+    <div class="card__footer">
+      <div class="card__price">{{ book.price }} ₴</div>
+       <button
+        class="card__button"
+        [disabled]="book.inStock === 0"
+        (click)="addToCart()"
+        aria-label="До кошика"
+      >
+        До кошика
+      </button>
+    </div>
+  </div>
+</div>

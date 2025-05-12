@@ -1,0 +1,27 @@
+<aside class="side-menu" [class.side-menu--collapsed]="collapsed()">
+  <div class="side-menu__header">
+    <span class="side-menu__username">{{ userName }}</span>
+    <button class="side-menu__toggle-btn" (click)="toggle()" aria-label="Toggle menu">
+      <lucide-icon [name]="collapsed() ? 'chevronRight' : 'chevronLeft'" class="side-menu__toggle-icon"></lucide-icon>
+    </button>
+  </div>
+
+  <nav class="side-menu__nav">
+    <a
+      *ngFor="let item of menuItems"
+      [routerLink]="item.path"
+      routerLinkActive="side-menu__nav-item--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="side-menu__nav-item"
+    >
+      <lucide-icon [name]="item.icon" class="side-menu__nav-icon"></lucide-icon>
+      <span class="side-menu__nav-label">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <button class="side-menu__logout" aria-label="Log out">
+    <lucide-icon name="logOut" class="side-menu__nav-icon"></lucide-icon>
+    <span class="side-menu__nav-label">Вийти</span>
+  </button>
+</aside>
+
