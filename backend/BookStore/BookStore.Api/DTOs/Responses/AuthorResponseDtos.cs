@@ -2,7 +2,8 @@
 {
     public record AuthorResponseDto(
         Guid Id,
-        string Name,
+        string FirstName,
+        string LastName,
         string? Bio
     );
 }

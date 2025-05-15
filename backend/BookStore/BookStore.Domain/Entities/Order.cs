@@ -13,7 +13,9 @@ namespace BookStore.Domain.Entities
         public required string UserId { get; set; }
         public ApplicationUser? User { get; set; }
 
-        public DateTime OrderDate { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
         public ICollection<OrderItem> Items { get; set; } = [];

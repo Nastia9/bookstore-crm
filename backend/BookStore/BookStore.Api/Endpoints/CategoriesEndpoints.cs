@@ -13,7 +13,7 @@ public static class CategoryEndpoints
     {
         var grp = app.MapGroup("/categories").WithTags("Categories");
 
-        grp.MapGet("/", GetAll)
+        grp.MapGet("", GetAll)
            .AllowAnonymous()
            .Produces<CategoryResponseDto[]>(200);
 
@@ -22,7 +22,7 @@ public static class CategoryEndpoints
            .Produces<CategoryResponseDto>(200)
            .Produces(404);
 
-        grp.MapPost("/", Create)
+        grp.MapPost("", Create)
            .RequireAuthorization("RequireEmployee")
            .Accepts<CreateCategoryDto>("application/json")
            .Produces<CategoryResponseDto>(201)

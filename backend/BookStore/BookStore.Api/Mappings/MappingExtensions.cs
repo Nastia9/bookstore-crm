@@ -55,7 +55,8 @@ namespace BookStore.Api.Mappings
                 book.Price,
                 new AuthorResponseDto(
                     book.Author.Id,
-                    book.Author.Name,
+                    book.Author.FirstName,
+                    book.Author.LastName,
                     book.Author.Bio
                 ),
                 book.Categories
@@ -67,20 +68,23 @@ namespace BookStore.Api.Mappings
             => new()
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Name,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
                 Bio = dto.Bio
             };
 
         public static void ApplyToEntity(this UpdateAuthorDto dto, Author entity)
         {
-            entity.Name = dto.Name;
+            entity.FirstName = dto.FirstName;
+            entity.LastName = dto.LastName;
             entity.Bio = dto.Bio;
         }
 
         public static AuthorResponseDto ToDto(this Author author)
             => new(
                 author.Id,
-                author.Name,
+                author.FirstName,
+                author.LastName,
                 author.Bio
             );
 
@@ -146,7 +150,8 @@ namespace BookStore.Api.Mappings
             {
                 Id = Guid.NewGuid(),
                 UserId = dto.UserId!,
-                OrderDate = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
                 Status = OrderStatus.Pending
             };
 
@@ -166,7 +171,7 @@ namespace BookStore.Api.Mappings
         public static void ApplyToEntity(this UpdateOrderRequestDto dto, Order order)
         {
             order.Status = dto.Status;
-
+            order.UpdatedAt = DateTime.UtcNow;
             if (dto.Items is not null)
             {
                 order.Items.Clear();
@@ -196,7 +201,8 @@ namespace BookStore.Api.Mappings
                 o.Id,
                 o.UserId,
                 o.User?.Email,
-                o.OrderDate,
+                o.CreatedAt,
+                o.UpdatedAt,
                 o.Status,
                 items);
         }
