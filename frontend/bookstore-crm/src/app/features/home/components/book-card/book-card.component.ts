@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Book } from '../../../../core/models/book';
-import { CartService } from '../../../../core/services/cart.service';
+import { CartService } from '../../../../core/services/utils/cart.service';
 
 @Component({
   selector: 'app-book-card',
@@ -12,6 +12,7 @@ import { CartService } from '../../../../core/services/cart.service';
 })
 export class BookCardComponent {
   @Input() book!: Book;
+  get authorFullName() { return `${this.book.author.firstName} ${this.book.author.lastName}`; }
 
   constructor(private cart: CartService) {}
 

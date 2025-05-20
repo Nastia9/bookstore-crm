@@ -5,6 +5,7 @@ import { Box, LucideAngularModule, Trash2, X }            from 'lucide-angular';
 import { Home, ShoppingCart, Package as packageIcon, BookOpen, Users, LogOut, ChevronLeft, ChevronRight } from 'lucide';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
         Box
       })
     ),
-    importProvidersFrom(NgbModule)
+    importProvidersFrom(NgbModule),
+    provideHttpClient()
   ]
 };

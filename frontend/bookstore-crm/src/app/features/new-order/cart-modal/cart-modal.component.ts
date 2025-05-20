@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject } from '@angular/core';
-import { CartService } from '../../../core/services/cart.service';
+import { CartService } from '../../../core/services/utils/cart.service';
 import { CartItem } from '../../../core/models/cart-item';
 import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
