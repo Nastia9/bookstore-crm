@@ -8,8 +8,8 @@
   </header>
 
   <div class="cart-modal__body">
-    <ng-container *ngIf="(items$ | async)?.length; else empty">
-      <div class="cart-item" *ngFor="let i of items$ | async">
+    <ng-container *ngIf="items()?.length; else empty">
+      <div class="cart-item" *ngFor="let i of items()">
         <div class="cart-item__info">
           <div class="cart-item__title">{{ i.book.title }}</div>
           <div class="cart-item__price">{{ i.book.price }} ₴ за од.</div>
@@ -25,7 +25,7 @@
         </button>
       </div>
       <footer class="cart-modal__footer">
-        <div class="cart-total">Загальна сума: <strong>{{ total }} ₴</strong></div>
+        <div class="cart-total">Загальна сума: <strong>{{ total() }} ₴</strong></div>
         <button class="cart-checkout" (click)="onCheckout()">
             Оформити замовлення
         </button>
