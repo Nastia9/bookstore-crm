@@ -37,7 +37,11 @@ namespace BookStore.Identity.Extensions
             var keyBytes = Convert.FromBase64String(keyBase64);
             var key = new SymmetricSecurityKey(keyBytes);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
               .AddJwtBearer(opt =>
               {
                   opt.TokenValidationParameters = new TokenValidationParameters

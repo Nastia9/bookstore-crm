@@ -1,13 +1,15 @@
 ﻿namespace BookStore.Api.DTOs.Requests
 {
     public record CreateAuthorDto(
-       string Name,
+       string FirstName,
+       string LastName,
        string? Bio
     );
 
     public record UpdateAuthorDto(
         Guid Id,
-        string Name,
+        string FirstName,
+        string LastName,
         string? Bio
     );
 }

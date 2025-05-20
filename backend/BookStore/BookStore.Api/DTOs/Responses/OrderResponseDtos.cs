@@ -14,6 +14,7 @@ namespace BookStore.Api.DTOs.Responses
         string UserId,
         string UserEmail,
         DateTime CreatedAt,
+        DateTime UpdatedAt,
         OrderStatus Status,
         IEnumerable<OrderItemResponseDto> Items
     );

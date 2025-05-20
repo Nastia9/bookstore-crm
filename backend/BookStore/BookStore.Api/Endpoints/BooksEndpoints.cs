@@ -3,6 +3,7 @@ using BookStore.Api.DTOs.Responses;
 using BookStore.Api.Mappings;
 using BookStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookStore.Api.Endpoints;
 
@@ -77,6 +78,17 @@ public static class BookEndpoints
         CancellationToken ct)
     {
         var book = dto.ToEntity();
+        if (dto.CategoryIds.IsNullOrEmpty() == false)
+        {
+            var categories = await db.BookCategories
+                                     .Where(c => dto.CategoryIds.Contains(c.Id))
+                                     .ToListAsync(ct);
+
+            foreach (var cat in categories)
+            {
+                book.Categories.Add(cat);
+            }
+        }
         db.Books.Add(book);
         await db.SaveChangesAsync(ct);
 
