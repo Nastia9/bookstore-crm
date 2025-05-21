@@ -2,6 +2,7 @@
 using BookStore.Api.DTOs.Responses;
 using BookStore.Api.Mappings;
 using BookStore.Domain.Entities;
+using BookStore.Identity.Models;
 using BookStore.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -64,17 +65,26 @@ public static class UserEndpoints
         var user = await users.FindByIdAsync(myId);
         if (user is null)
             return Results.NotFound();
+        var roles = await users.GetRolesAsync(user);
+        var highest = PickHighestRole(roles);
+        
 
-        return Results.Ok(user.ToResponseDto());
+        return Results.Ok(user.ToResponseDto(role: highest));
     }
 
     private static async Task<IResult> GetAllUsers(
-        UserManager<ApplicationUser> users,
+        UserManager<ApplicationUser> userManager,
         CancellationToken ct)
     {
-        var list = await users.Users
-            .Select(u => u.ToResponseDto())
-            .ToListAsync(ct);
+        var users = await userManager.Users.ToListAsync(ct);
+        var list = new List<UserResponseDto>(users.Count);
+
+        foreach (var u in users)
+        {
+            var roles = await userManager.GetRolesAsync(u);
+            var highest = PickHighestRole(roles);
+            list.Add(u.ToResponseDto(highest));
+        }
 
         return Results.Ok(list);
     }
@@ -87,8 +97,10 @@ public static class UserEndpoints
         var user = await users.FindByIdAsync(id);
         if (user is null)
             return Results.NotFound();
+        var roles = await users.GetRolesAsync(user);
+        var highest = PickHighestRole(roles);
 
-        return Results.Ok(user.ToResponseDto());
+        return Results.Ok(user.ToResponseDto(role: highest));
     }
 
     private static async Task<IResult> CreateUser(
@@ -103,12 +115,11 @@ public static class UserEndpoints
         if (!result.Succeeded)
             return Results.BadRequest(result.Errors);
 
-        // ensure role exists
         if (!await roles.RoleExistsAsync(dto.Role))
             await roles.CreateAsync(new IdentityRole(dto.Role));
 
         await users.AddToRoleAsync(user, dto.Role);
-        return Results.Created($"/users/{user.Id}", user.ToResponseDto());
+        return Results.Created($"/users/{user.Id}", user.ToResponseDto(role: dto.Role));
     }
 
     private static async Task<IResult> UpdateUser(
@@ -156,5 +167,12 @@ public static class UserEndpoints
 
         await users.DeleteAsync(user);
         return Results.NoContent();
+    }
+
+    private static string PickHighestRole(IList<string> roles)
+    {
+        if (roles.Contains(Roles.Admin)) return Roles.Admin;
+        if (roles.Contains(Roles.Employee)) return Roles.Employee;
+        return Roles.Customer;
     }
 }

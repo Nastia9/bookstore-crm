@@ -2,6 +2,7 @@
 using BookStore.Api.DTOs.Responses;
 using BookStore.Domain.Entities;
 using BookStore.Domain.Enums;
+using BookStore.Identity.Models;
 
 namespace BookStore.Api.Mappings
 {
@@ -134,14 +135,14 @@ namespace BookStore.Api.Mappings
             user.PhoneNumber = dto.PhoneNumber;
         }
 
-        public static UserResponseDto ToResponseDto(this ApplicationUser u)
+        public static UserResponseDto ToResponseDto(this ApplicationUser u, String role)
             => new(
                 u.Id,
                 u.Email!,
                 u.FirstName!,
                 u.LastName!,
                 u.PhoneNumber,
-                ""
+                role.ToLower()
              );
 
         public static Order ToEntity(this CreateOrderRequestDto dto)
