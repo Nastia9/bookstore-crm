@@ -6,7 +6,7 @@ import { Home, ShoppingCart, Package as packageIcon, BookOpen, Users, LogOut, Ch
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { AuthInterceptor } from './core/models/interceptors/auth';
+import { AuthInterceptor } from './core/interceptors/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
