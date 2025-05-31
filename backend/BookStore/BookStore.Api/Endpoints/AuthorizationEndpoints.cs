@@ -67,8 +67,16 @@ namespace BookStore.Api.Endpoints
 
             var roles = await userManager.GetRolesAsync(user);
             var token = tokenService.CreateToken(user.Id, user.Email!, roles);
+            var userDto = user.ToResponseDto(role: PickHighestRole(roles));
 
-            return Results.Ok(new LoginResponseDto { Token = token });
+            return Results.Ok(new LoginResponseDto { Token = token, User = userDto });
+        }
+
+        private static string PickHighestRole(IList<string> roles)
+        {
+            if (roles.Contains(Roles.Admin)) return Roles.Admin;
+            if (roles.Contains(Roles.Employee)) return Roles.Employee;
+            return Roles.Customer;
         }
     }
 }
