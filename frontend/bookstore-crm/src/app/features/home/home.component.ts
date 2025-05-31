@@ -37,7 +37,6 @@ export class HomeComponent {
       b.author.firstName.toLowerCase().includes(term)
     );
   }
-
 }
 
 

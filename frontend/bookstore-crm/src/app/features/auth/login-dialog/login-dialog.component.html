@@ -1,0 +1,57 @@
+<!-- src/app/auth/login-dialog/login-dialog.component.html -->
+<div mat-dialog-content class="login-dialog__content">
+  <h2 class="login-dialog__title">
+    <mat-icon>login</mat-icon>
+    Вхід в систему
+  </h2>
+  <p class="login-dialog__subtitle">
+    Введіть свої облікові дані для входу в систему
+  </p>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-dialog__form">
+    <mat-form-field appearance="outline" class="login-dialog__field">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Ваш email" required />
+      <mat-error *ngIf="emailControl.hasError('required')">
+        Email обов’язковий
+      </mat-error>
+      <mat-error *ngIf="emailControl.hasError('email') && !emailControl.hasError('required')">
+        Некоректний формат
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="login-dialog__field">
+      <mat-label>Пароль</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="Ваш пароль" required />
+      <mat-error *ngIf="passwordControl.hasError('required')">
+        Пароль обов’язковий
+      </mat-error>
+      <mat-error *ngIf="passwordControl.hasError('minlength') && !passwordControl.hasError('required')">
+        Мінімум 6 символів
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Тут відображаємо повідомлення про помилку від сервера -->
+    <div *ngIf="serverError" class="login-dialog__server-error">
+      <mat-icon color="warn">error_outline</mat-icon>
+      {{ serverError }}
+    </div>
+
+    <div class="login-dialog__actions">
+      <button mat-button (click)="onCancel()" color="warn" [disabled]="isLoading">
+        <mat-icon>close</mat-icon>
+        Відміна
+      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading">
+        <mat-icon *ngIf="!isLoading">login</mat-icon>
+        <mat-progress-spinner
+          *ngIf="isLoading"
+          mode="indeterminate"
+          diameter="20"
+        ></mat-progress-spinner>
+        <span *ngIf="!isLoading">Увійти</span>
+        <span *ngIf="isLoading">Зачекайте…</span>
+      </button>
+    </div>
+  </form>
+</div>

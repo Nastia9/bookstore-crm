@@ -1,7 +1,10 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { CommonModule }               from '@angular/common';
 import { RouterModule }               from '@angular/router';
 import { LucideAngularModule }        from 'lucide-angular';
+import { AuthService } from '../../../../core/services/general/auth.service';
+import { LoginDialogComponent } from '../../../auth/login-dialog/login-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface MenuItem {
   path: string;
@@ -17,19 +20,31 @@ interface MenuItem {
   styleUrls: ['./side-menu.component.scss']
 })
 export class SideMenuComponent {
-  /** Список пунктів меню */
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+
   @Input() menuItems: MenuItem[] = [];
+  @Input() userName = '';
+  @Input() isUserLogged = false;
 
-  /** Ім’я користувача */
-  @Input() userName = 'Адміністратор';
+  get toggleIcon(): string {
+    return this.collapsed() ? 'chevronRight' : 'chevronLeft';
+  }
 
-  /** Шлях до аватарки */
-  @Input() avatarUrl = 'assets/avatar.png';
-
-  /** Згортання сайдбару */
   collapsed = signal(false);
 
   toggle() {
     this.collapsed.update(v => !v);
+  }
+
+  openLoginDialog(): void {
+    const dialogRef = this.dialog.open(LoginDialogComponent, {
+      disableClose: true,
+      width: '400px'
+    });
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

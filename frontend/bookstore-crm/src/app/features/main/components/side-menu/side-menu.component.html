@@ -2,7 +2,7 @@
   <div class="side-menu__header">
     <span class="side-menu__username">{{ userName }}</span>
     <button class="side-menu__toggle-btn" (click)="toggle()" aria-label="Toggle menu">
-      <lucide-icon [name]="collapsed() ? 'chevronRight' : 'chevronLeft'" class="side-menu__toggle-icon"></lucide-icon>
+      <lucide-icon [name]="toggleIcon" class="side-menu__toggle-icon"></lucide-icon>
     </button>
   </div>
 
@@ -19,9 +19,16 @@
     </a>
   </nav>
 
-  <button class="side-menu__logout" aria-label="Log out">
-    <lucide-icon name="logOut" class="side-menu__nav-icon"></lucide-icon>
-    <span class="side-menu__nav-label">Вийти</span>
-  </button>
+  @if (isUserLogged) {
+    <button class="side-menu__bottom-button" (click)="logout()" aria-label="Log out">
+        <lucide-icon name="logOut" class="side-menu__nav-icon"></lucide-icon>
+        <span class="side-menu__nav-label">Вийти</span>
+    </button>
+  } @else {
+    <button class="side-menu__bottom-button" (click)="openLoginDialog()" aria-label="Log in">
+        <lucide-icon name="log-in" class="side-menu__nav-icon"></lucide-icon>
+        <span class="side-menu__nav-label">Увійти</span>
+    </button>
+  }
 </aside>
 
