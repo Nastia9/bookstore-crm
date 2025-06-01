@@ -1,0 +1,88 @@
+.books-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  button {
+    height: 36px;
+  }
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filter-item {
+  width: 250px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 16px;
+  text-align: center;
+
+  .stat-title {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 14px;
+  }
+  .stat-value {
+    margin-top: 4px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+table {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.book-row {
+  cursor: pointer;
+}
+.book-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-high {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-middle {
+  background-color: #fffde7;
+  color: #f9a825;
+}
+
+.status-low {
+  background-color: #ffebee;
+  color: #c62828;
+}
