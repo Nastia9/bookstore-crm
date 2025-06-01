@@ -3,6 +3,7 @@ using BookStore.Api.DTOs.Responses;
 using BookStore.Domain.Entities;
 using BookStore.Domain.Enums;
 using BookStore.Identity.Models;
+using System.Linq;
 
 namespace BookStore.Api.Mappings
 {
@@ -195,17 +196,17 @@ namespace BookStore.Api.Mappings
                     i.BookId,
                     i.Book.Title,
                     i.Quantity,
-                    i.UnitPrice))
+                    i.Book.Price))
                 .ToList();
 
             return new OrderResponseDto(
                 o.Id,
-                o.UserId,
-                o.User?.Email,
+                o.User.ToResponseDto(""),
                 o.CreatedAt,
                 o.UpdatedAt,
                 o.Status,
-                items);
+                items,
+                items.Aggregate(decimal.Zero, (acc, x) => acc + x.UnitPrice));
         }
     }
 }

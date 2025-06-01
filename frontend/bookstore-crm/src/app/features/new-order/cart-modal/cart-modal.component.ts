@@ -6,6 +6,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { OrdersService } from '../../../core/services/rest/orders.service';
+import { OrderRequestParameter } from '../../../core/models/request/order/order';
+import { AuthService } from '../../../core/services/general/auth.service';
+import { OrderItemRequestParameter } from '../../../core/models/request/order/order-item';
 
 @Component({
   selector: 'app-cart-modal',
@@ -18,6 +22,8 @@ export class CartModalComponent {
   private readonly cartModalRef = inject(MatDialogRef<CartModalComponent>);
   private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
+  private ordersService = inject(OrdersService);
+  private authService = inject(AuthService);
 
   public items = toSignal<CartItem[]>(this.cart.items$);
   public total = computed(() => this.items() ? this.items()!.reduce((sum, i) => sum + i.book.price * i.quantity, 0) : 0);
@@ -35,7 +41,36 @@ export class CartModalComponent {
   }
 
   onCheckout() {
-    this.onClose();
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return;
+    }
+
+    const orderItems: OrderItemRequestParameter[] = this.items()?.map(i => ({
+      bookId: i.book.id,
+      quantity: i.quantity
+    })) ?? [];
+
+    if (orderItems.length === 0) {
+      return;
+    }
+
+    const payload: OrderRequestParameter = {
+      userId: user.id,
+      items: orderItems
+    };
+
+    this.ordersService
+      .createOrder(payload)
+      .subscribe({
+        next: () => {
+          this.cart.clear();
+          this.cartModalRef.close();
+        },
+        error: err => {
+          alert('Не вдалося оформити замовлення. Спробуйте пізніше.');
+        }
+      });
   }
 
   onClose() {

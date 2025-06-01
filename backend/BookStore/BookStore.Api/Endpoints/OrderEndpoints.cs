@@ -55,6 +55,7 @@ public static class OrderEndpoints
         var isEmpOrAdmin = http.User.IsInRole(Roles.Employee) || http.User.IsInRole(Roles.Admin);
 
         var query = db.Orders
+            .Include(o => o.User)
             .Include(o => o.Items)
                 .ThenInclude(i => i.Book)
                     .ThenInclude(b => b.Author)
@@ -83,6 +84,7 @@ public static class OrderEndpoints
         var isEmpOrAdmin = http.User.IsInRole(Roles.Employee) || http.User.IsInRole(Roles.Admin);
 
         var order = await db.Orders
+            .Include(o => o.User)
             .Include(o => o.Items)
                 .ThenInclude(i => i.Book)
                     .ThenInclude(b => b.Author)
@@ -121,7 +123,10 @@ public static class OrderEndpoints
         db.Orders.Add(order);
         await db.SaveChangesAsync(ct);
 
-        // reload nav props for response
+        await db.Entry(order)
+            .Reference(o => o.User)
+            .LoadAsync(ct);
+
         await db.Entry(order).Collection(o => o.Items).Query()
             .Include(i => i.Book).ThenInclude(b => b.Author)
             .LoadAsync(ct);

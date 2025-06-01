@@ -1,0 +1,56 @@
+<mat-card class="dialog-card">
+      <mat-card-header>
+        <div mat-card-avatar class="dialog-icon">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <mat-card-title>Деталі замовлення</mat-card-title>
+        <mat-card-subtitle>Замовлення {{ order?.id }} від {{ orderDate }}</mat-card-subtitle>
+        <button mat-icon-button class="close-button" (click)="onClose()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content *ngIf="order">
+        <div class="detail-row">
+          <span class="label">Клієнт:</span>
+          <span class="value">{{ order.user.lastName }} {{ order.user.firstName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Кількість товарів:</span>
+          <span class="value">{{ itemsCount }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Сума:</span>
+          <span class="value">{{ totalSum }} ₴</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Дата:</span>
+          <span class="value">{{ orderDate }}</span>
+        </div>
+
+        <mat-divider class="separator"></mat-divider>
+
+        <form [formGroup]="statusForm" class="status-form">
+          <span class="section-title">Статус замовлення:</span>
+          <mat-radio-group formControlName="status">
+            <mat-radio-button [value]="OrderStatus.pending">В обробці</mat-radio-button>
+            <mat-radio-button [value]="OrderStatus.shipped">Виконано</mat-radio-button>
+            <mat-radio-button [value]="OrderStatus.cancelled">Скасовано</mat-radio-button>
+          </mat-radio-group>
+        </form>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="statusForm.pristine || statusForm.invalid">
+          Оновити статус
+        </button>
+        <button mat-button (click)="onClose()">Відмінити</button>
+      </mat-card-actions>
+
+      <!-- Якщо сталася помилка під час оновлення -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </mat-card>
