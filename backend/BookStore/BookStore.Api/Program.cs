@@ -1,7 +1,9 @@
 using BookStore.Api.Endpoints;
 using BookStore.Api.Extensions;
 using BookStore.Identity.Extensions;
+using BookStore.Infrastructure.Data;
 using BookStore.Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
