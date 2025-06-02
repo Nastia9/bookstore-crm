@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5013'
+  apiUrl: 'https://bookstore-api-e3apf0dna6aff6dv.westeurope-01.azurewebsites.net/'
 };

@@ -1,9 +1,11 @@
-name: Deploy Backend to Azure
+name: Deploy Frontend to Azure
 
 on:
   push:
     branches:
-      - feature/add-frontend-part
+      - main
+    paths:
+      - 'frontend/**'
 
 jobs:
   build-and-deploy:
@@ -18,20 +20,20 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Build and Push Docker image to ACR
+    - name: Login to ACR
       uses: azure/docker-login@v1
       with:
         login-server: bookstoreappregistry.azurecr.io
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Build and push image
+    - name: Build and push Angular image
       run: |
-          docker build -f backend/BookStore/dockerfile -t bookstoreappregistry.azurecr.io/bookstore-api:latest .
-          docker push bookstoreappregistry.azurecr.io/bookstore-api:latest
+        docker build -t bookstoreappregistry.azurecr.io/bookstore-frontend:latest frontend/bookstore-crm
+        docker push bookstoreappregistry.azurecr.io/bookstore-frontend:latest
 
     - name: Deploy to App Service
       uses: azure/webapps-deploy@v2
       with:
-        app-name: bookstore-api
-        images: 'bookstoreappregistry.azurecr.io/bookstore-api:latest'
+        app-name: bookstore-frontend
+        images: bookstoreappregistry.azurecr.io/bookstore-frontend:latest
