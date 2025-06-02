@@ -27,8 +27,8 @@ jobs:
 
     - name: Build and push image
       run: |
-        docker build -t bookstoreappregistry.azurecr.io/bookstore-api:latest .
-        docker push bookstoreappregistry.azurecr.io/bookstore-api:latest
+          docker build -f backend/BookStore/dockerfile -t bookstoreappregistry.azurecr.io/bookstore-api:latest .
+          docker push bookstoreappregistry.azurecr.io/bookstore-api:latest
 
     - name: Deploy to App Service
       uses: azure/webapps-deploy@v2
