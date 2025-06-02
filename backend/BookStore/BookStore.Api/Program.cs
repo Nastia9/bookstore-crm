@@ -36,5 +36,11 @@ app.MapUserEndpoints();
 
 await app.Services.SeedRolesAndAdminAsync();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BookStoreDbContext>();
+    dbContext.Database.Migrate();
+}
+
 app.Run();
 
