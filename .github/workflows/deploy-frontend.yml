@@ -27,7 +27,7 @@ jobs:
 
     - name: Build and push Angular image
       run: |
-        docker build -t bookstoreappregistry.azurecr.io/bookstore-frontend:latest frontend/bookstore-crm
+        docker build -f frontend/bookstore-crm/dockerfile -t bookstoreappregistry.azurecr.io/bookstore-frontend:latest frontend/bookstore-crm
         docker push bookstoreappregistry.azurecr.io/bookstore-frontend:latest
 
     - name: Deploy to App Service
