@@ -206,7 +206,7 @@ namespace BookStore.Api.Mappings
                 o.UpdatedAt,
                 o.Status,
                 items,
-                items.Aggregate(decimal.Zero, (acc, x) => acc + x.UnitPrice));
+                items.Aggregate(decimal.Zero, (acc, x) => acc + (x.UnitPrice * x.Quantity)));
         }
     }
 }

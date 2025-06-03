@@ -1,6 +1,6 @@
 import { Component, inject, Input, signal } from '@angular/core';
 import { CommonModule }               from '@angular/common';
-import { RouterModule }               from '@angular/router';
+import { RouterModule, Router }               from '@angular/router';
 import { LucideAngularModule }        from 'lucide-angular';
 import { AuthService } from '../../../../core/services/general/auth.service';
 import { LoginDialogComponent } from '../../../auth/login-dialog/login-dialog.component';
@@ -22,6 +22,7 @@ interface MenuItem {
 export class SideMenuComponent {
   private dialog = inject(MatDialog);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   @Input() menuItems: MenuItem[] = [];
   @Input() userName = '';
@@ -46,5 +47,9 @@ export class SideMenuComponent {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/profile'])
   }
 }

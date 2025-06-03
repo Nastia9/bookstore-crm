@@ -1,6 +1,13 @@
 <aside class="side-menu" [class.side-menu--collapsed]="collapsed()">
   <div class="side-menu__header">
-    <span class="side-menu__username">{{ userName }}</span>
+    @if (isUserLogged) {
+      <a mat-list-item (click)="navigateToProfile()">
+        <span class="side-menu__username">{{ userName }}</span>
+       </a>
+    } @else {
+      <span class="side-menu__username">{{ userName }}</span>
+    }
+    
     <button class="side-menu__toggle-btn" (click)="toggle()" aria-label="Toggle menu">
       <lucide-icon [name]="toggleIcon" class="side-menu__toggle-icon"></lucide-icon>
     </button>

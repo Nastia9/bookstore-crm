@@ -1,0 +1,89 @@
+.profile-page-container {
+  max-width: 800px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.avatar-placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.avatar-icon {
+  font-size: 36px;
+  color: #757575;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-email {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.email-icon {
+  font-size: 18px;
+}
+
+.profile-actions {
+  margin-left: auto;
+}
+
+.orders-card {
+  padding: 16px;
+}
+
+.orders-header {
+  margin-top: 0;
+}
+
+.orders-loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.no-orders {
+  padding: 16px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.no-user-warning {
+  text-align: center;
+  margin: 48px 0;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.7);
+}

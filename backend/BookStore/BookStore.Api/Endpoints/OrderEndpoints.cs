@@ -19,6 +19,10 @@ public static class OrderEndpoints
            .RequireAuthorization()  // any authenticated user
            .Produces<OrderResponseDto[]>(200);
 
+        grp.MapGet("/my", GetAllOrdersMy)
+           .RequireAuthorization()  // any authenticated user
+           .Produces<OrderResponseDto[]>(200);
+
         grp.MapGet("/{id:guid}", GetOrderById)
            .RequireAuthorization()
            .Produces<OrderResponseDto>(200)
@@ -66,6 +70,27 @@ public static class OrderEndpoints
             // customers only see their own
             query = query.Where(o => o.UserId == userId);
         }
+
+        var list = await query
+            .Select(o => o.ToResponseDto())
+            .ToListAsync(ct);
+
+        return Results.Ok(list);
+    }
+
+    private static async Task<IResult> GetAllOrdersMy(
+        HttpContext http,
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        var callerId = http.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var query = db.Orders
+            .Include(o => o.User)
+            .Include(o => o.Items)
+                .ThenInclude(i => i.Book)
+                    .ThenInclude(b => b.Author)
+            .Where(o => o.UserId == callerId)
+            .AsQueryable();
 
         var list = await query
             .Select(o => o.ToResponseDto())
