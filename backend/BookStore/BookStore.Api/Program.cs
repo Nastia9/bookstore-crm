@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
         policyBuilder
           .WithOrigins(
               "http://localhost:4200",
-              "https://bookstore-frontend.azurewebsites.net"
+              "https://bookstore-frontend-htc9bmd9dwe9fcau.westeurope-01.azurewebsites.net"
            )
           .AllowAnyHeader()                       
           .AllowAnyMethod();
