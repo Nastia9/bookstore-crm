@@ -12,7 +12,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularClient", policyBuilder =>
     {
         policyBuilder
-          .WithOrigins("http://localhost:4200")
+          .WithOrigins(
+              "http://localhost:4200",
+              "https://bookstore-frontend.azurewebsites.net"
+           )
           .AllowAnyHeader()                       
           .AllowAnyMethod();
     });
