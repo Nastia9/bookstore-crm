@@ -1,8 +1,11 @@
 FROM node:20-alpine as build
 WORKDIR /app
 COPY . .
-RUN npm install
+
+RUN npm ci
 RUN npm run build --prod
+
+RUN echo "--- DIST CONTENT ---" && ls -la /app/dist/bookstore-crm
 
 FROM nginx:alpine
 COPY --from=build /app/dist/bookstore-crm /usr/share/nginx/html
