@@ -5,9 +5,9 @@ COPY . .
 RUN npm ci
 RUN npm run build --prod
 
-RUN echo "--- DIST CONTENT ---" && ls -la /app/dist/bookstore-crm
+RUN echo "--- DIST CONTENT ---" && ls -la /app/dist/bookstore-crm/browser
 
 FROM nginx:alpine
-COPY --from=build /app/dist/bookstore-crm /usr/share/nginx/html
+COPY --from=build /app/dist/bookstore-crm/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
