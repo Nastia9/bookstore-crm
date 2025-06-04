@@ -8,6 +8,6 @@ RUN npm run build --prod
 RUN echo "--- DIST CONTENT ---" && ls -la /app/dist/bookstore-crm/browser
 
 FROM nginx:alpine
-RUN mkdir /usr/share/nginx/bookstore-profile-app
-COPY --from=build /app/dist/bookstore-profile-app/browser /usr/share/nginx/bookstore-profile-app
-COPY bookstore-profile-app.conf /etc/nginx/conf.d/default.conf
+RUN mkdir /usr/share/nginx/bookstore-crm
+COPY --from=build /dist/bookstore-crm/browser /usr/share/nginx/bookstore-crm
+COPY bookstore-crm.conf /etc/nginx/conf.d/default.conf
