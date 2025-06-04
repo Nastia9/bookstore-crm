@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { appGuard } from './core/guards/app.guard';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./features/main/main.component').then(m=>m.MainComponent),
+    canActivateChild: [appGuard],
     children: [
         { path: '', redirectTo: 'home', pathMatch: 'full' },
         {
