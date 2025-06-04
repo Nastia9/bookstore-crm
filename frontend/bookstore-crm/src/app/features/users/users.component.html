@@ -1,1 +1,83 @@
-<p>users works!</p>
+<div class="users-page">
+  <div class="filters-row">
+    <mat-form-field appearance="outline" class="filter-item">
+      <mat-label>Пошук користувачів</mat-label>
+      <input
+        matInput
+        placeholder="Введіть текст..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="onFilterChange()"
+      />
+    </mat-form-field>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="add-button"
+      (click)="openAddUserDialog()"
+    >
+      <mat-icon>person_add</mat-icon>
+      Додати
+    </button>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="filteredUsers()" class="mat-elevation-z2">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let u"> {{ u.id }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef> Користувач </th>
+        <td mat-cell *matCellDef="let u">
+          <div class="user-info-cell">
+            <div class="user-name">{{ u.firstName }} {{ u.lastName }}</div>
+            <div class="user-email">{{ u.email }}</div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef> Роль </th>
+        <td mat-cell *matCellDef="let u">
+          <span class="role-badge" [ngClass]="u.role">
+            {{
+              u.role === 'admin'
+                ? 'Адміністратор'
+                : u.role === 'client'
+                ? 'Клієнт'
+                : 'Менеджер'
+            }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Дії </th>
+        <td mat-cell *matCellDef="let u">
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Редагувати"
+            (click)="openEditUserDialog(u)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            matTooltip="Видалити"
+            (click)="deleteUser(u.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>

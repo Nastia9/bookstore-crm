@@ -153,7 +153,7 @@ public static class UserEndpoints
         if (!update.Succeeded)
             return Results.BadRequest(update.Errors);
 
-        return Results.NoContent();
+        return Results.Ok(user.ToResponseDto(dto.Role));
     }
 
     private static async Task<IResult> DeleteUser(
