@@ -22,7 +22,8 @@ public static class ImagesEndpoints
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream, ct);
 
-            var imageUrl = $"/uploads/{fileName}";
+            var baseUrl = $"{request.Scheme}://{request.Host}";
+            var imageUrl = $"{baseUrl}/uploads/{fileName}";
             return Results.Ok(new { imagePath = imageUrl });
         })
         .WithName("UploadBookImage")

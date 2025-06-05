@@ -41,6 +41,7 @@ export class EditUserDialogComponent {
   public firstName = signal(this.data.userToEdit ? this.data.userToEdit.firstName : '');
   public lastName = signal(this.data.userToEdit ? this.data.userToEdit.lastName : '');
   public email = signal(this.data.userToEdit ? this.data.userToEdit.email : '');
+  public phoneNumber = signal(this.data.userToEdit ? this.data.userToEdit.phoneNumber : '');
   public role = signal<UserRole>(this.data.userToEdit ? this.data.userToEdit.role : UserRole.customer);
 
   public isSaving = signal(false);
@@ -62,6 +63,7 @@ export class EditUserDialogComponent {
       firstName: this.firstName(),
       lastName: this.lastName(),
       email: this.email(),
+      phoneNumber: this.phoneNumber(),
       role: this.role(),
       password: "P@ssw0rd!"
     };

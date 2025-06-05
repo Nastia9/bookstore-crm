@@ -41,8 +41,9 @@ export class UsersComponent implements OnInit {
   public searchText = '';
 
   public displayedColumns: string[] = [
-    'id',
-    'user',
+    'name',
+    'email',
+    'phoneNumber',
     'role',
     'actions'
   ];

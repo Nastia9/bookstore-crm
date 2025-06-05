@@ -15,6 +15,8 @@ import { Category } from '../../../../core/models/category';
 import { Author } from '../../../../core/models/author';
 import { AddCategoryDialogComponent } from '../add-category-dialog/add-category-dialog.component';
 import { AddAuthorDialogComponent } from '../add-author-dialog/add-author-dialog.component';
+import { ImagesService } from '../../../../core/services/rest/images.service';
+import { environment } from '../../../../../environments/environment';
 
 interface AddEditBookData {
   bookToEdit: Book | null;
@@ -38,6 +40,7 @@ interface AddEditBookData {
 })
 export class AddEditBookDialogComponent implements OnInit {
   private booksService = inject(BooksService);
+  private imagesService = inject(ImagesService);
   private dialog = inject(MatDialog);
   private dialogRef = inject<MatDialogRef<AddEditBookDialogComponent, Book | null>>(MatDialogRef);
   private data = inject<AddEditBookData>(MAT_DIALOG_DATA);
@@ -59,7 +62,8 @@ export class AddEditBookDialogComponent implements OnInit {
       isbn: ['', Validators.required],
       categoryIds: [[]],
       price: [0, [Validators.required, Validators.min(0)]],
-      stock: [0, [Validators.required, Validators.min(0)]]
+      stock: [0, [Validators.required, Validators.min(0)]],
+      imagePath: ['']
     });
 
     if (this.mode === 'edit' && this.data.bookToEdit) {
@@ -71,7 +75,8 @@ export class AddEditBookDialogComponent implements OnInit {
         isbn: b.isbn,
         categoryIds: [...b.categories.map(c => c.id)],
         price: b.price,
-        stock: b.stock
+        stock: b.stock,
+        imagePath: b.imagePath ?? ''
       });
     }
 
@@ -180,5 +185,23 @@ export class AddEditBookDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('files', file);
+
+    this.imagesService.uploadImage(formData).subscribe({
+      next: (res) => {
+        this.bookForm.patchValue({ imagePath: res.imagePath });
+      },
+      error: (err) => {
+        console.error('Помилка завантаження зображення', err);
+      }
+    });
   }
 }

@@ -65,7 +65,7 @@ export class WarehouseComponent implements OnInit {
   );
 
   public displayedColumns: string[] = [
-    'id', 'title', 'author', 'isbn', 'categories', 'price', 'quantity', 'status', 'actions'
+    'title', 'author', 'isbn', 'categories', 'price', 'quantity', 'status', 'actions'
   ];
 
   ngOnInit(): void {
@@ -109,10 +109,10 @@ export class WarehouseComponent implements OnInit {
     this.filteredBooks.set(filtered);
   }
 
-  public getStatus(book: Book): 'Достатньо' | 'Середньо' | 'Низько' {
+  public getStatus(book: Book): 'Достатньо' | 'Середньо' | 'Закінчується' {
     if (book.stock >= 15)    return 'Достатньо';
     else if (book.stock >= 8) return 'Середньо';
-    else                         return 'Низько';
+    else                         return 'Закінчується';
   }
 
     openAddDialog(): void {

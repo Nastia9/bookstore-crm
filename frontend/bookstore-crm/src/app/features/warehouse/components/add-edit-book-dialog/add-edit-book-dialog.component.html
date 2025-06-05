@@ -63,6 +63,16 @@
         </mat-error>
       </mat-form-field>
 
+      <div>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+          <img
+            *ngIf="bookForm.value.imagePath"
+            [src]="bookForm.value.imagePath"
+            alt="Обкладинка"
+            style="max-height: 120px; display: block; margin-top: 8px;"
+          />
+      </div>
+
       <div class="two-columns">
         <!-- Ціна -->
         <mat-form-field appearance="outline" class="half-width">

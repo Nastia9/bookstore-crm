@@ -8,9 +8,20 @@
   height: 320px;
 
   &__image {
-    flex: 0 0 180px;
+    height: 180px;
+    width: 100%;
     background: #f3f4f6;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+    }
+  } 
 
   &__body {
     display: flex;

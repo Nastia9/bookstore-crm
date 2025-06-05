@@ -56,8 +56,8 @@ export class OrdersComponent implements OnInit {
   public totalSum = signal<number>(0);
 
   public displayedColumns: string[] = [
-    'id',
     'clientName',
+    'clientNamePhoneNumber',
     'date',
     'status',
     'itemsCount',

@@ -20,6 +20,12 @@
   </div>
   <div class="input-group">
     <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Номер телефону</mat-label>
+      <input matInput [(ngModel)]="phoneNumber" placeholder="+3800000000" />
+    </mat-form-field>
+  </div>
+  <div class="input-group">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Роль</mat-label>
       <mat-select [(ngModel)]="role">
         <mat-option value="admin">Адміністратор</mat-option>

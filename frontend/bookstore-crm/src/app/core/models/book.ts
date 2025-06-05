@@ -10,4 +10,5 @@ export interface Book {
   stock: number;
   author: Author;
   categories: Category[];
+  imagePath?: string;
 }

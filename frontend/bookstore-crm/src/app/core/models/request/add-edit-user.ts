@@ -5,6 +5,7 @@ export interface AddEditUserRequestParameter {
     email?: string;
     firstName: string;
     lastName: string;
+    phoneNumber?: string;
     role: UserRole;
     password?: string;
 }
