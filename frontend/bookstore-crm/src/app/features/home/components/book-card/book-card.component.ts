@@ -14,8 +14,6 @@ export class BookCardComponent {
   @Input() book!: Book;
   get authorFullName() { return `${this.book.author.firstName} ${this.book.author.lastName}`; }
 
-  get imagePath() { return `https://bookstore-api-e3apf0dna6aff6dv.westeurope-01.azurewebsites.net/${this.book.imagePath}` }
-
   constructor(private cart: CartService) {}
 
   addToCart() {
