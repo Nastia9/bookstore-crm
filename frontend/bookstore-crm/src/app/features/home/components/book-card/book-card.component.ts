@@ -13,6 +13,7 @@ import { CartService } from '../../../../core/services/utils/cart.service';
 export class BookCardComponent {
   @Input() book!: Book;
   get authorFullName() { return `${this.book.author.firstName} ${this.book.author.lastName}`; }
+  get categoriesText() { return this.book.categories.map(b => b.name).join(", "); }
 
   constructor(private cart: CartService) {}
 
