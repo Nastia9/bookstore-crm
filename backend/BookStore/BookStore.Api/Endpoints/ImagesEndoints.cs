@@ -7,7 +7,7 @@ public static class ImagesEndpoints
     {
         var grp = app.MapGroup("/images").WithTags("Images");
 
-        grp.MapPost("/upload", async (HttpRequest request, IWebHostEnvironment env, CancellationToken ct) =>
+        grp.MapPost("/", async (HttpRequest request, IWebHostEnvironment env, CancellationToken ct) =>
         {
             var file = request.Form.Files.FirstOrDefault();
             if (file is null || file.Length == 0)
