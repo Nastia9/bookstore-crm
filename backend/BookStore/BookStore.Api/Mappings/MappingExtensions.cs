@@ -19,6 +19,7 @@ namespace BookStore.Api.Mappings
                 Stock = dto.Stock,
                 Price = dto.Price,
                 AuthorId = dto.AuthorId,
+                ImagePath = dto.ImagePath,
                 Author = null!,
                 Categories = new List<BookCategory>()
             };
@@ -33,6 +34,7 @@ namespace BookStore.Api.Mappings
                 Stock = dto.Stock,
                 Price = dto.Price,
                 AuthorId = dto.AuthorId,
+                ImagePath = dto.ImagePath,
                 Author = null!,
                 Categories = new List<BookCategory>()
             };
@@ -45,6 +47,7 @@ namespace BookStore.Api.Mappings
             entity.Stock = dto.Stock;
             entity.Price = dto.Price;
             entity.AuthorId = dto.AuthorId;
+            entity.ImagePath = dto.ImagePath;
         }
 
         public static BookResponseDto ToDto(this Book book)
@@ -55,6 +58,7 @@ namespace BookStore.Api.Mappings
                 book.Pages,
                 book.Stock,
                 book.Price,
+                book.ImagePath,
                 new AuthorResponseDto(
                     book.Author.Id,
                     book.Author.FirstName,

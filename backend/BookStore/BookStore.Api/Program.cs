@@ -31,6 +31,7 @@ app.UseCors("AllowAngularClient");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles();
 
 app.MapAuthEndpoints();
 app.MapAuthorEndpoints();
@@ -38,6 +39,7 @@ app.MapCategoryEndpoints();
 app.MapBookEndpoints();
 app.MapOrderEndpoints();
 app.MapUserEndpoints();
+app.MapImagesEndpoints();
 
 await app.Services.SeedRolesAndAdminAsync();
 
