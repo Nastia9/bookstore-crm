@@ -3,7 +3,7 @@ name: Deploy Frontend to Azure
 on:
   push:
     branches:
-      - feature/add-frontend-part
+      - main
 
 jobs:
   build-and-deploy:
