@@ -4,6 +4,7 @@ import { LoginResponse } from '../../models/response/login-response';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { User } from '../../models/user';
+import { RegisterRequestParameters } from '../../models/request/register';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,10 @@ export class AuthService {
           this.isLoggedIn.set(true)
         })
       );
+  }
+
+  register(parameters: RegisterRequestParameters) {
+    return this.http.post(`${environment.apiUrl}/auth/register/`, parameters);
   }
 
   logout() {

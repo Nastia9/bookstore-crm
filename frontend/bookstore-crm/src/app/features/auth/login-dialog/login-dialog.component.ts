@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../../../core/services/general/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule }     from '@angular/material/input';
 import { MatButtonModule }    from '@angular/material/button';
 import { MatIconModule }      from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { catchError, of } from 'rxjs';
+import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -20,7 +21,8 @@ import { catchError, of } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    NgIf
   ],
   templateUrl: './login-dialog.component.html',
   styleUrl: './login-dialog.component.scss'
@@ -29,6 +31,7 @@ export class LoginDialogComponent {
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<LoginDialogComponent>);
   private auth = inject(AuthService);
+  private dialog = inject(MatDialog);
 
   public loginForm: FormGroup;
   public serverError: string | null = null;
@@ -78,5 +81,18 @@ export class LoginDialogComponent {
 
   onCancel(): void {
     this.dialogRef.close(null);
+  }
+
+  openRegister(): void {
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.dialog.open(RegisterDialogComponent).afterClosed().subscribe(success => {
+        if (success) {
+          alert('Реєстрація успішна! Увійдіть у систему.');
+          this.dialog.open(LoginDialogComponent);
+        }
+      });
+    });
+
+    this.dialogRef.close();
   }
 }

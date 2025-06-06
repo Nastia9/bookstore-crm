@@ -5,17 +5,19 @@ import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { OrdersService } from '../../../core/services/rest/orders.service';
 import { OrderRequestParameter } from '../../../core/models/request/order/order';
 import { AuthService } from '../../../core/services/general/auth.service';
 import { OrderItemRequestParameter } from '../../../core/models/request/order/order-item';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-cart-modal',
   templateUrl: './cart-modal.component.html',
   styleUrls: ['./cart-modal.component.scss'],
-  imports: [CommonModule, FormsModule, LucideAngularModule]
+  imports: [CommonModule, FormsModule, LucideAngularModule, MatIcon, MatDivider, MatDialogContent]
 })
 export class CartModalComponent {
   private readonly cart = inject(CartService);

@@ -146,6 +146,19 @@ public static class OrderEndpoints
 
         var order = dto.ToEntity();
         db.Orders.Add(order);
+
+        foreach (var item in order.Items)
+        {
+            var book = await db.Books.FindAsync([item.BookId], ct);
+            if (book == null)
+                return Results.BadRequest($"Book with id {item.BookId} not found.");
+
+            if (book.Stock < item.Quantity)
+                return Results.BadRequest($"Not enough stock for book '{book.Title}'. Available: {book.Stock}, requested: {item.Quantity}");
+
+            book.Stock -= item.Quantity;
+        }
+
         await db.SaveChangesAsync(ct);
 
         await db.Entry(order)
@@ -189,11 +202,31 @@ public static class OrderEndpoints
                 return Results.BadRequest("Customers may only cancel pending orders.");
 
             order.Status = OrderStatus.Cancelled;
+
+            foreach (var item in order.Items)
+            {
+                var book = await db.Books.FindAsync([item.BookId], ct);
+                if (book != null)
+                {
+                    book.Stock += item.Quantity;
+                }
+            }
         }
         else
         {
-            // employee can edit freely
+            var previousStatus = order.Status;
             dto.ApplyToEntity(order);
+            if (previousStatus == OrderStatus.Pending && order.Status == OrderStatus.Cancelled)
+            {
+                foreach (var item in order.Items)
+                {
+                    var book = await db.Books.FindAsync([item.BookId], ct);
+                    if (book != null)
+                    {       
+                        book.Stock += item.Quantity;
+                    }
+                }
+            }
         }
 
         await db.SaveChangesAsync(ct);

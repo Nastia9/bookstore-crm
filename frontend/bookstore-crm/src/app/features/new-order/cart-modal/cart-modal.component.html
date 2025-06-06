@@ -1,41 +1,60 @@
-<div class="cart-backdrop" (click)="onClose()"></div>
-<div class="cart-modal">
+<mat-dialog-content class="cart-modal__body">
   <header class="cart-modal__header">
-    <h2><lucide-icon name="shoppingCart"></lucide-icon> Кошик</h2>
-    <button class="cart-modal__close" (click)="onClose()">
-      <lucide-icon name="x"></lucide-icon>
+    <h2>
+      <mat-icon>shopping_cart</mat-icon> Кошик
+    </h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Закрити">
+      <mat-icon>close</mat-icon>
     </button>
   </header>
 
-  <div class="cart-modal__body">
-    <ng-container *ngIf="items()?.length; else empty">
-      <div class="cart-item" *ngFor="let i of items()">
-        <div class="cart-item__info">
-          <div class="cart-item__title">{{ i.book.title }}</div>
-          <div class="cart-item__price">{{ i.book.price }} ₴ за од.</div>
-        </div>
-        <div class="cart-item__controls">
-          <button (click)="dec(i)">–</button>
-          <span>{{ i.quantity }}</span>
-          <button (click)="inc(i)">+</button>
-        </div>
-        <div class="cart-item__sum">{{ i.book.price * i.quantity }} ₴</div>
-        <button class="cart-item__del" (click)="remove(i)">
-          <lucide-icon name="trash2" class="text-red-500"></lucide-icon>
+  <ng-container *ngIf="items()?.length; else empty">
+    <div class="cart-item" *ngFor="let i of items()">
+      <div class="cart-item__info">
+        <div class="cart-item__title">{{ i.book.title }}</div>
+        <div class="cart-item__price">{{ i.book.price }} ₴ за од.</div>
+      </div>
+      <div class="cart-item__controls">
+        <button mat-icon-button color="primary" (click)="dec(i)" aria-label="Decrease">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <span>{{ i.quantity }}</span>
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="inc(i)"
+          aria-label="Increase"
+          [disabled]="i.quantity >= i.book.stock"
+        >
+          <mat-icon>add</mat-icon>
         </button>
       </div>
-      <footer class="cart-modal__footer">
-        <div class="cart-total">Загальна сума: <strong>{{ total() }} ₴</strong></div>
-        <button class="cart-checkout" (click)="onCheckout()">
-            Оформити замовлення
-        </button>
-      </footer>
-    </ng-container>
-    <ng-template #empty>
-      <div class="cart-modal__empty">
-        <lucide-icon name="shoppingCart" size="48"></lucide-icon>
-        <p>Ваш кошик порожній</p>
-      </div>
-    </ng-template>
-  </div>
-</div>
+      <div class="cart-item__sum">{{ i.book.price * i.quantity }} ₴</div>
+      <button mat-icon-button color="warn" (click)="remove(i)" aria-label="Remove">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <footer class="cart-modal__footer">
+      <div class="cart-total">Загальна сума: <strong>{{ total() }} ₴</strong></div>
+      <button
+        mat-flat-button
+        color="primary"
+        class="checkout-button"
+        (click)="onCheckout()"
+      >
+        Оформити замовлення
+      </button>
+    </footer>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="cart-modal__empty">
+      <mat-icon style="font-size: 48px;">shopping_cart</mat-icon>
+      <p>Ваш кошик порожній</p>
+    </div>
+  </ng-template>
+</mat-dialog-content>
+

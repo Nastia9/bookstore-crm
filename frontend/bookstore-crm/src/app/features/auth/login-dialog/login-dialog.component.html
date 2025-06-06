@@ -1,4 +1,3 @@
-<!-- src/app/auth/login-dialog/login-dialog.component.html -->
 <div mat-dialog-content class="login-dialog__content">
   <h2 class="login-dialog__title">
     <mat-icon>login</mat-icon>
@@ -31,11 +30,15 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Тут відображаємо повідомлення про помилку від сервера -->
     <div *ngIf="serverError" class="login-dialog__server-error">
       <mat-icon color="warn">error_outline</mat-icon>
       {{ serverError }}
     </div>
+
+    <p class="login-dialog__register-link">
+      Немає облікового запису?
+      <button mat-button color="primary" (click)="openRegister()">Зареєструватися</button>
+    </p>
 
     <div class="login-dialog__actions">
       <button mat-button (click)="onCancel()" color="warn" [disabled]="isLoading">
