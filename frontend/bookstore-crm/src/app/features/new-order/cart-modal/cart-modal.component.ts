@@ -1,0 +1,81 @@
+import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { CartService } from '../../../core/services/utils/cart.service';
+import { CartItem } from '../../../core/models/cart-item';
+import { LucideAngularModule } from 'lucide-angular';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { OrdersService } from '../../../core/services/rest/orders.service';
+import { OrderRequestParameter } from '../../../core/models/request/order/order';
+import { AuthService } from '../../../core/services/general/auth.service';
+import { OrderItemRequestParameter } from '../../../core/models/request/order/order-item';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+
+@Component({
+  selector: 'app-cart-modal',
+  templateUrl: './cart-modal.component.html',
+  styleUrls: ['./cart-modal.component.scss'],
+  imports: [CommonModule, FormsModule, LucideAngularModule, MatIcon, MatDivider, MatDialogContent]
+})
+export class CartModalComponent {
+  private readonly cart = inject(CartService);
+  private readonly cartModalRef = inject(MatDialogRef<CartModalComponent>);
+  private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
+  private ordersService = inject(OrdersService);
+  private authService = inject(AuthService);
+
+  public items = toSignal<CartItem[]>(this.cart.items$);
+  public total = computed(() => this.items() ? this.items()!.reduce((sum, i) => sum + i.book.price * i.quantity, 0) : 0);
+
+  remove(item: CartItem) {
+    this.cart.remove(item.book);
+  }
+
+  dec(item: CartItem) {
+    this.cart.changeQuantity(item.book, -1);
+  }
+
+  inc(item: CartItem) {
+    this.cart.changeQuantity(item.book, +1);
+  }
+
+  onCheckout() {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return;
+    }
+
+    const orderItems: OrderItemRequestParameter[] = this.items()?.map(i => ({
+      bookId: i.book.id,
+      quantity: i.quantity
+    })) ?? [];
+
+    if (orderItems.length === 0) {
+      return;
+    }
+
+    const payload: OrderRequestParameter = {
+      userId: user.id,
+      items: orderItems
+    };
+
+    this.ordersService
+      .createOrder(payload)
+      .subscribe({
+        next: () => {
+          this.cart.clear();
+          this.cartModalRef.close();
+        },
+        error: err => {
+          alert('Не вдалося оформити замовлення. Спробуйте пізніше.');
+        }
+      });
+  }
+
+  onClose() {
+    this.cartModalRef.close();
+  }
+}

@@ -118,7 +118,13 @@ public static class BookEndpoints
 
         dto.ApplyToEntity(book);
         await db.SaveChangesAsync(ct);
-        return Results.NoContent();
+
+        await db.Entry(book).Reference(b => b.Author).LoadAsync(ct);
+        await db.Entry(book).Collection(b => b.Categories)
+              .Query()
+              .LoadAsync(ct);
+
+        return Results.Ok(book.ToDto());
     }
 
     private static async Task<IResult> Delete(

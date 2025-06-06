@@ -1,0 +1,23 @@
+<header class="top-bar">
+  <div class="top-bar__logo">
+    <lucide-icon name="bookOpen" class="top-bar__icon"></lucide-icon>
+    <span class="top-bar__title">{{ title }}</span>
+  </div>
+
+  <div class="top-bar__actions">
+    <button
+      class="top-bar__cart-btn"
+      aria-label="Кошик"
+      (click)="openCart()"
+    >
+      <lucide-icon name="shoppingCart" class="top-bar__icon"></lucide-icon>
+      <span
+        *ngIf="cartItemCount$ | async as cnt; else noBadge"
+        class="top-bar__badge"
+      >
+        {{ cnt }}
+      </span>
+      <ng-template #noBadge></ng-template>
+    </button>
+  </div>
+</header>

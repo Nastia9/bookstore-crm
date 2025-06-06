@@ -1,0 +1,85 @@
+<section class="profile-page-container" *ngIf="currentUser() as user; else noUser">
+  <!-- Картка з інформацією про користувача -->
+  <mat-card class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-placeholder">
+        <mat-icon class="avatar-icon" fontIcon="person_outline"></mat-icon>
+      </div>
+      <div class="profile-info">
+        <h2 class="profile-name">
+          {{ user.lastName }} {{ user.firstName }}
+          <mat-chip [color]="user.role.includes('admin') ? 'accent' : 'primary'" selected>
+            {{ user.role | titlecase }}
+          </mat-chip>
+        </h2>
+        <div class="profile-email">
+          <mat-icon fontIcon="mail_outline" class="email-icon"></mat-icon>
+          {{ user.email }}
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Секція «Мої замовлення» -->
+  <mat-card class="orders-card">
+    <h3 class="orders-header">Мої замовлення</h3>
+
+    <!-- Якщо займається завантаження -->
+    <div class="orders-loading" *ngIf="isLoading()">
+      <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <!-- Коли вже є orders -->
+    <table mat-table [dataSource]="myOrders()" class="mat-elevation-z4" *ngIf="!isLoading() && myOrders().length > 0">
+      <!-- Date column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Дата </th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.createdAt | date : 'dd.MM.yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Status column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Статус </th>
+        <td mat-cell *matCellDef="let order">
+          <mat-chip
+            [color]=" getStatusLabel(order.status).color "
+            selected>
+            {{ getStatusLabel(order.status).text }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Items Count column -->
+      <ng-container matColumnDef="itemsCount">
+        <th mat-header-cell *matHeaderCellDef> Товари </th>
+        <td mat-cell *matCellDef="let order">
+          {{ order.items.length }}
+        </td>
+      </ng-container>
+
+      <!-- Total Sum column -->
+      <ng-container matColumnDef="totalSum">
+        <th mat-header-cell *matHeaderCellDef> Сума </th>
+        <td mat-cell *matCellDef="let order">
+          {{ formatOrderTotalPrice(order) }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Якщо жодного замовлення -->
+    <div class="no-orders" *ngIf="!isLoading() && myOrders().length === 0">
+      <p>У вас поки немає жодного замовлення.</p>
+    </div>
+  </mat-card>
+</section>
+
+<ng-template #noUser>
+  <div class="no-user-warning">
+    <p>Будь ласка, увійдіть до системи, щоб переглянути свій профіль.</p>
+  </div>
+</ng-template>

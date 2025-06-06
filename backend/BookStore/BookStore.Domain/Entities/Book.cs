@@ -20,5 +20,6 @@ namespace BookStore.Domain.Entities
 
         public int Stock { get; set; }
         public decimal Price { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

@@ -1,0 +1,40 @@
+<div mat-dialog-content class="register-dialog__content">
+<h2 class="register-dialog__title">
+  <mat-icon>person_add</mat-icon>
+  Реєстрація
+</h2>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-dialog__form">
+
+  <mat-form-field appearance="outline" class="register-dialog__field">
+    <mat-label>Імʼя</mat-label>
+    <input matInput formControlName="firstName" />
+    <mat-error *ngIf="firstName.invalid && firstName.touched">Обовʼязково</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="register-dialog__field">
+    <mat-label>Прізвище</mat-label>
+    <input matInput formControlName="lastName" />
+    <mat-error *ngIf="lastName.invalid && lastName.touched">Обовʼязково</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="register-dialog__field">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" />
+    <mat-error *ngIf="email.invalid && email.touched">Некоректно</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="register-dialog__field">
+    <mat-label>Пароль</mat-label>
+    <input matInput formControlName="password" type="password" />
+    <mat-error *ngIf="password.invalid && password.touched">Мінімум 6 символів</mat-error>
+  </mat-form-field>
+
+  <div class="register-dialog__actions">
+    <button mat-button (click)="dialogRef.close()">Скасувати</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading">
+      Зареєструватися
+    </button>
+  </div>
+</form>
+</div>

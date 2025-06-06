@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+<mat-dialog-content class="dialog-content">
+  <div class="input-group">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ім'я</mat-label>
+      <input matInput [(ngModel)]="firstName" placeholder="Ім'я" />
+    </mat-form-field>
+  </div>
+  <div class="input-group">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Прізвище</mat-label>
+      <input matInput [(ngModel)]="lastName" placeholder="Прізвище" />
+    </mat-form-field>
+  </div>
+  <div class="input-group">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="email" placeholder="email@example.com" />
+    </mat-form-field>
+  </div>
+  <div class="input-group">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Номер телефону</mat-label>
+      <input matInput [(ngModel)]="phoneNumber" placeholder="+3800000000" />
+    </mat-form-field>
+  </div>
+  <div class="input-group">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Роль</mat-label>
+      <mat-select [(ngModel)]="role">
+        <mat-option value="admin">Адміністратор</mat-option>
+        <mat-option value="manager">Менеджер</mat-option>
+        <mat-option value="customer">Клієнт</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="error-msg" *ngIf="errorMsg()">
+    <span class="error-text">{{ errorMsg() }}</span>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Скасувати</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving()">
+    {{ actionLabel }}
+  </button>
+</mat-dialog-actions>

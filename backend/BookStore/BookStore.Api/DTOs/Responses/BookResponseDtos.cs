@@ -7,6 +7,7 @@
         int Pages,
         int Stock,
         decimal Price,
+        string? ImagePath,
         AuthorResponseDto Author,
         CategoryResponseDto[] Categories
     );

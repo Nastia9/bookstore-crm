@@ -2,6 +2,8 @@
 using BookStore.Api.DTOs.Responses;
 using BookStore.Domain.Entities;
 using BookStore.Domain.Enums;
+using BookStore.Identity.Models;
+using System.Linq;
 
 namespace BookStore.Api.Mappings
 {
@@ -17,6 +19,7 @@ namespace BookStore.Api.Mappings
                 Stock = dto.Stock,
                 Price = dto.Price,
                 AuthorId = dto.AuthorId,
+                ImagePath = dto.ImagePath,
                 Author = null!,
                 Categories = new List<BookCategory>()
             };
@@ -31,6 +34,7 @@ namespace BookStore.Api.Mappings
                 Stock = dto.Stock,
                 Price = dto.Price,
                 AuthorId = dto.AuthorId,
+                ImagePath = dto.ImagePath,
                 Author = null!,
                 Categories = new List<BookCategory>()
             };
@@ -43,6 +47,7 @@ namespace BookStore.Api.Mappings
             entity.Stock = dto.Stock;
             entity.Price = dto.Price;
             entity.AuthorId = dto.AuthorId;
+            entity.ImagePath = dto.ImagePath;
         }
 
         public static BookResponseDto ToDto(this Book book)
@@ -53,6 +58,7 @@ namespace BookStore.Api.Mappings
                 book.Pages,
                 book.Stock,
                 book.Price,
+                book.ImagePath,
                 new AuthorResponseDto(
                     book.Author.Id,
                     book.Author.FirstName,
@@ -134,14 +140,14 @@ namespace BookStore.Api.Mappings
             user.PhoneNumber = dto.PhoneNumber;
         }
 
-        public static UserResponseDto ToResponseDto(this ApplicationUser u)
+        public static UserResponseDto ToResponseDto(this ApplicationUser u, String role)
             => new(
                 u.Id,
                 u.Email!,
                 u.FirstName!,
                 u.LastName!,
                 u.PhoneNumber,
-                ""
+                role.ToLower()
              );
 
         public static Order ToEntity(this CreateOrderRequestDto dto)
@@ -194,17 +200,17 @@ namespace BookStore.Api.Mappings
                     i.BookId,
                     i.Book.Title,
                     i.Quantity,
-                    i.UnitPrice))
+                    i.Book.Price))
                 .ToList();
 
             return new OrderResponseDto(
                 o.Id,
-                o.UserId,
-                o.User?.Email,
+                o.User.ToResponseDto(""),
                 o.CreatedAt,
                 o.UpdatedAt,
                 o.Status,
-                items);
+                items,
+                items.Aggregate(decimal.Zero, (acc, x) => acc + (x.UnitPrice * x.Quantity)));
         }
     }
 }

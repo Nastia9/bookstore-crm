@@ -19,6 +19,10 @@ public static class OrderEndpoints
            .RequireAuthorization()  // any authenticated user
            .Produces<OrderResponseDto[]>(200);
 
+        grp.MapGet("/my", GetAllOrdersMy)
+           .RequireAuthorization()  // any authenticated user
+           .Produces<OrderResponseDto[]>(200);
+
         grp.MapGet("/{id:guid}", GetOrderById)
            .RequireAuthorization()
            .Produces<OrderResponseDto>(200)
@@ -55,6 +59,7 @@ public static class OrderEndpoints
         var isEmpOrAdmin = http.User.IsInRole(Roles.Employee) || http.User.IsInRole(Roles.Admin);
 
         var query = db.Orders
+            .Include(o => o.User)
             .Include(o => o.Items)
                 .ThenInclude(i => i.Book)
                     .ThenInclude(b => b.Author)
@@ -73,6 +78,27 @@ public static class OrderEndpoints
         return Results.Ok(list);
     }
 
+    private static async Task<IResult> GetAllOrdersMy(
+        HttpContext http,
+        BookStoreDbContext db,
+        CancellationToken ct)
+    {
+        var callerId = http.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var query = db.Orders
+            .Include(o => o.User)
+            .Include(o => o.Items)
+                .ThenInclude(i => i.Book)
+                    .ThenInclude(b => b.Author)
+            .Where(o => o.UserId == callerId)
+            .AsQueryable();
+
+        var list = await query
+            .Select(o => o.ToResponseDto())
+            .ToListAsync(ct);
+
+        return Results.Ok(list);
+    }
+
     private static async Task<IResult> GetOrderById(
         Guid id,
         HttpContext http,
@@ -83,6 +109,7 @@ public static class OrderEndpoints
         var isEmpOrAdmin = http.User.IsInRole(Roles.Employee) || http.User.IsInRole(Roles.Admin);
 
         var order = await db.Orders
+            .Include(o => o.User)
             .Include(o => o.Items)
                 .ThenInclude(i => i.Book)
                     .ThenInclude(b => b.Author)
@@ -119,9 +146,25 @@ public static class OrderEndpoints
 
         var order = dto.ToEntity();
         db.Orders.Add(order);
+
+        foreach (var item in order.Items)
+        {
+            var book = await db.Books.FindAsync([item.BookId], ct);
+            if (book == null)
+                return Results.BadRequest($"Book with id {item.BookId} not found.");
+
+            if (book.Stock < item.Quantity)
+                return Results.BadRequest($"Not enough stock for book '{book.Title}'. Available: {book.Stock}, requested: {item.Quantity}");
+
+            book.Stock -= item.Quantity;
+        }
+
         await db.SaveChangesAsync(ct);
 
-        // reload nav props for response
+        await db.Entry(order)
+            .Reference(o => o.User)
+            .LoadAsync(ct);
+
         await db.Entry(order).Collection(o => o.Items).Query()
             .Include(i => i.Book).ThenInclude(b => b.Author)
             .LoadAsync(ct);
@@ -159,11 +202,31 @@ public static class OrderEndpoints
                 return Results.BadRequest("Customers may only cancel pending orders.");
 
             order.Status = OrderStatus.Cancelled;
+
+            foreach (var item in order.Items)
+            {
+                var book = await db.Books.FindAsync([item.BookId], ct);
+                if (book != null)
+                {
+                    book.Stock += item.Quantity;
+                }
+            }
         }
         else
         {
-            // employee can edit freely
+            var previousStatus = order.Status;
             dto.ApplyToEntity(order);
+            if (previousStatus == OrderStatus.Pending && order.Status == OrderStatus.Cancelled)
+            {
+                foreach (var item in order.Items)
+                {
+                    var book = await db.Books.FindAsync([item.BookId], ct);
+                    if (book != null)
+                    {       
+                        book.Stock += item.Quantity;
+                    }
+                }
+            }
         }
 
         await db.SaveChangesAsync(ct);

@@ -1,0 +1,108 @@
+<h2 mat-dialog-title>
+      <mat-icon>menu_book</mat-icon>
+      &nbsp;{{ mode === 'edit' ? 'Редагувати книгу' : 'Додати нову книгу' }}
+      <button mat-icon-button mat-dialog-close class="close-button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="dialog-form">
+      <!-- Назва -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Назва</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error *ngIf="bookForm.get('title')?.hasError('required')">
+          Поле «Назва» обов’язкове
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Автор -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Автор</mat-label>
+        <mat-select formControlName="authorId" (selectionChange)="onAuthorChange($event.value)">
+          <mat-option *ngFor="let auth of authors" [value]="auth.id">
+            {{ auth.firstName }} {{ auth.lastName }}
+          </mat-option>
+          <mat-divider></mat-divider>
+          <mat-option class="new-option" [value]="'__new_author__'">
+            <mat-icon>person_add</mat-icon> Створити нового автора…
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="bookForm.get('authorId')?.hasError('required')">
+          Поле «Автор» обов’язкове
+        </mat-error>
+      </mat-form-field>
+
+      <!-- ISBN -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>ISBN</mat-label>
+        <input matInput formControlName="isbn" />
+        <mat-error *ngIf="bookForm.get('isbn')?.hasError('required')">
+          Поле «ISBN» обов’язкове
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Категорії (multiple select) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Категорії</mat-label>
+        <mat-select
+          formControlName="categoryIds"
+          multiple
+          (selectionChange)="onCategoryChange($event.value)"
+        >
+          <mat-option *ngFor="let cat of categories" [value]="cat.id">
+            {{ cat.name }}
+          </mat-option>
+          <mat-divider></mat-divider>
+          <mat-option class="new-option" [value]="'__new_category__'">
+            <mat-icon>add</mat-icon> Створити нову категорію…
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="bookForm.get('categoryIds')?.hasError('required')">
+          Поле «Категорії» обов’язкове
+        </mat-error>
+      </mat-form-field>
+
+      <div>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+          <img
+            *ngIf="bookForm.value.imagePath"
+            [src]="bookForm.value.imagePath"
+            alt="Обкладинка"
+            style="max-height: 120px; display: block; margin-top: 8px;"
+          />
+      </div>
+
+      <div class="two-columns">
+        <!-- Ціна -->
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Ціна (₴)</mat-label>
+          <input matInput type="number" formControlName="price" />
+          <mat-error *ngIf="bookForm.get('price')?.hasError('required')">
+            Вкажіть ціну
+          </mat-error>
+          <mat-error *ngIf="bookForm.get('price')?.hasError('min')">
+            Ціна має бути ≥ 0
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Кількість -->
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Кількість книг</mat-label>
+          <input matInput type="number" formControlName="stock" />
+          <mat-error *ngIf="bookForm.get('stock')?.hasError('required')">
+            Вкажіть кількість
+          </mat-error>
+          <mat-error *ngIf="bookForm.get('stock')?.hasError('min')">
+            Кількість має бути ≥ 0
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        <button mat-stroked-button mat-dialog-close color="warn">Скасувати</button>
+        <button mat-flat-button color="primary" [disabled]="bookForm.invalid">
+          {{ mode === 'edit' ? 'Оновити книгу' : 'Додати книгу' }}
+        </button>
+      </div>
+    </form>

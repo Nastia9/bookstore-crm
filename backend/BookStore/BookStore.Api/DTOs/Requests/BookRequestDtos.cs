@@ -7,7 +7,8 @@
         int Stock,
         decimal Price,
         Guid AuthorId,
-        Guid[]? CategoryIds
+        Guid[]? CategoryIds,
+        string? ImagePath
     );
 
     public record UpdateBookDto(
@@ -18,6 +19,7 @@
         int Stock,
         decimal Price,
         Guid AuthorId,
-        Guid[]? CategoryIds
+        Guid[]? CategoryIds,
+        string? ImagePath
     );
 }
