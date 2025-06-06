@@ -1,0 +1,60 @@
+<mat-dialog-content class="cart-modal__body">
+  <header class="cart-modal__header">
+    <h2>
+      <mat-icon>shopping_cart</mat-icon> Кошик
+    </h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Закрити">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <ng-container *ngIf="items()?.length; else empty">
+    <div class="cart-item" *ngFor="let i of items()">
+      <div class="cart-item__info">
+        <div class="cart-item__title">{{ i.book.title }}</div>
+        <div class="cart-item__price">{{ i.book.price }} ₴ за од.</div>
+      </div>
+      <div class="cart-item__controls">
+        <button mat-icon-button color="primary" (click)="dec(i)" aria-label="Decrease">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <span>{{ i.quantity }}</span>
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="inc(i)"
+          aria-label="Increase"
+          [disabled]="i.quantity >= i.book.stock"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="cart-item__sum">{{ i.book.price * i.quantity }} ₴</div>
+      <button mat-icon-button color="warn" (click)="remove(i)" aria-label="Remove">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <footer class="cart-modal__footer">
+      <div class="cart-total">Загальна сума: <strong>{{ total() }} ₴</strong></div>
+      <button
+        mat-flat-button
+        color="primary"
+        class="checkout-button"
+        (click)="onCheckout()"
+      >
+        Оформити замовлення
+      </button>
+    </footer>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="cart-modal__empty">
+      <mat-icon style="font-size: 48px;">shopping_cart</mat-icon>
+      <p>Ваш кошик порожній</p>
+    </div>
+  </ng-template>
+</mat-dialog-content>
+

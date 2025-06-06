@@ -1,0 +1,10 @@
+.main {
+  display: flex;
+  height: calc(100vh - 4rem);
+  overflow: hidden;
+}
+.main__sidebar { flex-shrink: 0; }
+.main__content {
+  flex: 1;
+  overflow: scroll;
+}

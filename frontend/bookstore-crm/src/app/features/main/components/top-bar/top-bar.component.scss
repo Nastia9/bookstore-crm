@@ -1,0 +1,54 @@
+.top-bar {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #1f2937;
+  }
+
+  &__title {
+    margin-left: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  &__actions {
+    position: relative;
+  }
+
+  &__cart-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    position: relative;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.75rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

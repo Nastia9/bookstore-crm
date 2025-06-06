@@ -1,0 +1,37 @@
+name: Deploy Frontend to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Login to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: bookstoreappregistry.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build and push Angular image
+      run: |
+        docker build -f frontend/bookstore-crm/dockerfile -t bookstoreappregistry.azurecr.io/bookstore-frontend:latest frontend/bookstore-crm
+        docker push bookstoreappregistry.azurecr.io/bookstore-frontend:latest
+
+    - name: Deploy to App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: bookstore-frontend
+        images: bookstoreappregistry.azurecr.io/bookstore-frontend:latest

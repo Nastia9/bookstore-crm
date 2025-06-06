@@ -1,0 +1,50 @@
+.register-dialog__content {
+      min-width: 320px;
+      max-width: 400px;
+      padding: 24px;
+    }
+
+    .register-dialog__title {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .register-dialog__title mat-icon {
+      margin-right: 8px;
+    }
+
+    .register-dialog__subtitle {
+      margin: 0 0 16px 0;
+      color: rgba(0,0,0,0.6);
+      font-size: 0.95rem;
+    }
+
+    .register-dialog__form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .register-dialog__field {
+      width: 100%;
+    }
+
+    .register-dialog__hint {
+      font-size: 0.85rem;
+      color: rgba(0,0,0,0.54);
+      margin-top: -8px;
+    }
+
+    .register-dialog__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .register-dialog__register-link {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.9rem;
+    }

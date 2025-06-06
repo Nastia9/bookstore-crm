@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Додати нового автора</h2>
+    <form [formGroup]="form" (ngSubmit)="onCreate()" class="dialog-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Імʼя</mat-label>
+        <input matInput formControlName="firstName" />
+        <mat-error *ngIf="form.get('firstName')?.hasError('required')">
+          Поле «Імʼя» обов’язкове
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Прізвище</mat-label>
+        <input matInput formControlName="lastName" />
+        <mat-error *ngIf="form.get('lastName')?.hasError('required')">
+          Поле «Прізвище» обов’язкове
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Біографія</mat-label>
+        <textarea matInput formControlName="bio" rows="3"></textarea>
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-stroked-button mat-dialog-close color="warn">Відмінити</button>
+        <button mat-flat-button color="primary" [disabled]="form.invalid">
+          Додати
+        </button>
+      </div>
+    </form>

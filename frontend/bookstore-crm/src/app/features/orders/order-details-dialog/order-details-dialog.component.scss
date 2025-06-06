@@ -1,0 +1,45 @@
+.dialog-card {
+      width: 400px;
+      position: relative;
+    }
+    .header mat-card-header {
+      align-items: center;
+    }
+    .dialog-icon mat-icon {
+      font-size: 32px;
+      margin-top: 8px;
+    }
+    .close-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+    .label {
+      font-weight: 500;
+      color: rgba(0,0,0,0.7);
+    }
+    .value {
+      color: rgba(0,0,0,0.87);
+    }
+    .separator {
+      margin: 16px 0;
+    }
+    .status-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .section-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .error-message {
+      color: #f44336;
+      margin: 8px 16px;
+    }

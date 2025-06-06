@@ -1,0 +1,20 @@
+<div class="home">
+  <div class="home__header">
+    <h1 class="home__title">Головна</h1>
+    <input
+      class="home__search"
+      type="text"
+      placeholder="Пошук книг..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <div class="home__grid">
+    <app-book-card
+      *ngFor="let book of filteredBooks"
+      [book]="book"
+    ></app-book-card>
+  </div>
+</div>
+
+
